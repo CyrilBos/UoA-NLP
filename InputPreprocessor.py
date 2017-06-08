@@ -26,6 +26,9 @@ class InputPreprocessor:
         for subtree in tree.subtrees(lambda t: t.label() == 'NP'):
             yield subtree.leaves()
 
+    def stem(self, word):
+        return self.__stemmer.stem(word)
+
     def normalise(self, word):
         """Normalises words to lowercase and stems and lemmatizes it."""
         word = word.lower()
@@ -44,18 +47,14 @@ class InputPreprocessor:
             term = [self.normalise(w) for w, t in leaf if self.acceptable_word(w)]
             yield term
 
+    def tokenize(self, doc):
+        return nltk.regexp_tokenize(doc, self.__sentence_re)
+
 
     def preprocess_terms(self):
         doc_terms = []
         for doc in self.__doc_set:
             print('Preprocessing terms of following content:')
             print(doc)
-            toks = nltk.regexp_tokenize(doc, self.__sentence_re)
-            postoks = nltk.tag.pos_tag(toks)
-
-            print('POS-tagged words: ')
-            print(postoks)
-
-            tree = self.__chunker.parse(postoks)
-            doc_terms.append(self.get_terms(tree))
+            doc_terms.append(self.get_terms(self.__chunker.parse(nltk.tag.pos_tag(self.tokenize(doc)))))
         return doc_terms

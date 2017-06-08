@@ -3,6 +3,7 @@ import nltk
 from Database import DatabaseManager
 
 from KeywordProcessor import KeywordProcessor
+from LatentDirichletAllocation import LatentDirichletAllocation
 
 from Logger import logger
 
@@ -25,14 +26,19 @@ for question in result:
 
 print(docs)
 
-kwpcsr = KeywordProcessor(docs)
+def RankKeywords():
+    kwpcsr = KeywordProcessor(docs)
+
+    words_occurences = kwpcsr.count_keywords()
 
 
-words_occurences = kwpcsr.count_keywords()
+    print('Occurences for each stemmed and lemmatized keyword: ')
+    print(words_occurences)
+    print('Sorted by descending occurence: ')
+    print(sorted(words_occurences, key=words_occurences.__getitem__, reverse=True))
 
+def LDA():
+    lda = LatentDirichletAllocation(docs)
+    lda.compute()
 
-
-print('Occurences for each stemmed and lemmatized keyword: ')
-print(words_occurences)
-print('Sorted by descending occurence: ')
-print(sorted(words_occurences, key=words_occurences.__getitem__, reverse=True))
+LDA()
