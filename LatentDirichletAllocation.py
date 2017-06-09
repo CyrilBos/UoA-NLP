@@ -1,3 +1,4 @@
+import pyLDAvis.gensim
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -12,7 +13,7 @@ class LatentDirichletAllocation:
         self.__preprocessor = InputPreprocessor(doc_set)
 
 
-    def compute(self):
+    def compute(self, save_filename):
         texts = []
 
         tokenizer = RegexpTokenizer(r'\w+')
@@ -43,9 +44,22 @@ class LatentDirichletAllocation:
         # convert tokenized documents into a document-term matrix
         corpus = [dictionary.doc2bow(text) for text in texts]
 
+        topics = 100
+        passes = 20
+
         # generate LDA model
-        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=100, id2word=dictionary, passes=20, workers=9)
-        for topic in ldamodel.print_topics(num_topics=-1, num_words=10):
-           print(topic)
-        print(ldamodel.print_topics(num_topics=5, num_words=5))
-        print(ldamodel.print_topics(num_topics=2, num_words=4))
+        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=9)
+
+        save_filename += "_{}_{}".format(topics, passes)
+
+        dictionary.save(save_filename + ".dict")
+        gensim.corpora.MmCorpus.save_corpus(save_filename + ".mm", corpus, id2word=dictionary)
+        ldamodel.save(save_filename + ".model")
+
+        #for topic in ldamodel.print_topics(num_topics=-1, num_words=20):
+           #print(topic)
+        #print(ldamodel.print_topics(num_topics=5, num_words=5))
+        #print(ldamodel.print_topics(num_topics=2, num_words=4))
+
+        #pyLDAvis.gensim.prepare(ldamodel, corpus, dictionary)
+        return ldamodel

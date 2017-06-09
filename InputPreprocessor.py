@@ -54,7 +54,7 @@ class InputPreprocessor:
     def preprocess_terms(self):
         doc_terms = []
         for doc in self.__doc_set:
-            print('Preprocessing terms of following content:')
-            print(doc)
+            #print('Preprocessing terms of following content:')
+            #print(doc)
             doc_terms.append(self.get_terms(self.__chunker.parse(nltk.tag.pos_tag(self.tokenize(doc)))))
         return doc_terms
