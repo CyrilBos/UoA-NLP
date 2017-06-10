@@ -13,7 +13,7 @@ class LatentDirichletAllocation:
         self.__preprocessor = InputPreprocessor(doc_set)
 
 
-    def compute(self, save_filename):
+    def compute(self, num_topics, passes, save_filename):
         texts = []
 
         tokenizer = RegexpTokenizer(r'\w+')
@@ -48,7 +48,7 @@ class LatentDirichletAllocation:
         passes = 20
 
         # generate LDA model
-        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=9)
+        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=3)
 
         save_filename += "_{}_{}".format(topics, passes)
 
@@ -62,4 +62,4 @@ class LatentDirichletAllocation:
         #print(ldamodel.print_topics(num_topics=2, num_words=4))
 
         #pyLDAvis.gensim.prepare(ldamodel, corpus, dictionary)
-        return ldamodel
+        return ldamodel, corpus, dictionary
