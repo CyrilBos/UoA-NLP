@@ -30,6 +30,19 @@ connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
 replies_db = dbmg.query("select * from replies", None, 'dict')
 questions_db = dbmg.query("select * from questions", None, 'dict')
+replies_by_question_db = dbmg.query("""select reply_id, text, question_id
+from replies
+where question_id in
+    ( select question_id
+    from replies group by questions_id)
+    order by question_id asc""", None, 'dict')
+replies_question_forum_db = dbmg.query("""select *
+from replies
+join questions on questions.questions_id = replies.questions_id
+join forum_details on questions.forum_details_id = forum_details.forum_details_id
+""", None, dict)
+
+dbmg.close()
 
 questions = {}
 
@@ -52,13 +65,6 @@ for reply in replies_db:
     else:
         logger.error('Reply of ID {} has no text'.format(question['reply_id']))
 
-replies_by_question_db = dbmg.query("""select reply_id, text, question_id
-from replies
-where question_id in
-    ( select question_id
-    from replies group by question_id)
-    order by question_id asc""", None, 'dict')
-
 replies_by_question = {}
 
 for reply_by_question in replies_by_question_db:
@@ -80,11 +86,7 @@ for reply_by_question in replies_by_question_db:
     #print(replies_by_question[question]['ldamodel'].print_topics(num_topics=-1, num_words=20))
 
 
-replies_question_forum_db = dbmg.query("""select *
-from replies
-join questions on questions.question_id = replies.question_id
-join forum_details on questions.forum_detail_id = forum_details.forum_detail_id
-""", None, dict)
+
 
 replies_question_forum = {}
 for reply_question_forum in replies_question_forum_db:
@@ -110,6 +112,6 @@ for forum in replies_question_forum:
     for question in replies_question_forum[forum]:
         for reply_text in replies_question_forum[forum][question]['replies_text']:
             texts.append(reply_text)
-    lda, ftg, osef = LDA(texts, 100, 20, "lda-saves/lda_replies_question_forum_{}".format(forum))
+    lda, crps, dict = LDA(texts, 100, 20, "lda-saves/lda_replies_question_forum_{}".format(forum))
 
     #print(lda.print_topics(num_topics=-1, num_words=-1))
