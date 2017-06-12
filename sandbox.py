@@ -11,7 +11,6 @@ dictionary = gensim.corpora.Dictionary.load(save_filename + ".dict")
 corpus = gensim.corpora.MmCorpus(save_filename + ".mm")
 ldamodel = gensim.models.LdaMulticore.load(save_filename + ".model")
 
-
 vis_data = pyLDAvis.gensim.prepare(ldamodel, corpus, dictionary)
 pyLDAvis.display(vis_data)
 #pyLDAvis.enable_notebook(vis_data)
