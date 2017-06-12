@@ -90,9 +90,9 @@ text_clf = text_clf.fit(questions.data, questions.target)
 predicted = text_clf.predict(questions.data)
 print(np.mean(predicted == questions.target))
 
-doc_predict = ["I am having issues with api authentication"]
+new_question_predict = ["I am having issues with api authentication"]
 
-sup = text_clf.predict(doc_predict)
+sup = text_clf.predict(new_question_predict)
 print(sup)
 print(questions.target_names)
 print(questions.target_names[sup[0]])
