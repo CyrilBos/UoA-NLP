@@ -15,3 +15,8 @@ class DatabaseManager:
             curs = self.__cursor
         curs.execute(query_string, query_data)
         return curs.fetchall()
+
+    def close(self):
+        self.__connection.close()
+        self.__cursor.close()
+        self.__dict_cursor.close()

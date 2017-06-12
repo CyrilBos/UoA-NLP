@@ -11,10 +11,10 @@ class KeywordProcessor:
 
         for term in terms:
             for word in term:
-                for something in word:
-                    if something in words_occurences:
-                        words_occurences[something] += 1
+                for occurence in word:
+                    if occurence in words_occurences:
+                        words_occurences[occurence] += 1
                     else:
-                        words_occurences[something] = 1
+                        words_occurences[occurence] = 1
 
         return words_occurences
