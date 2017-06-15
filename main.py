@@ -1,7 +1,8 @@
 import nltk
 import pyLDAvis
 
-from Database import DatabaseManager
+from DatabaseHelper import DatabaseHelper
+from DatabaseManager import DatabaseManager
 
 from KeywordProcessor import KeywordProcessor
 from LatentDirichletAllocation import LatentDirichletAllocation
@@ -27,20 +28,17 @@ def LDA(docs, topics, passes, save_filename):
 
 
 connect_string = "dbname=uoa-nlp user=admin"
-dbmg = DatabaseManager(connect_string)
+dbmg = DatabaseHelper(connect_string)
 replies_db = dbmg.query("select * from replies", None, 'dict')
 questions_db = dbmg.query("select * from questions", None, 'dict')
-replies_by_question_db = dbmg.query("""select reply_id, text, question_id
+replies_by_question_db = dbmg.query("""select replies_id, text, questions_id
 from replies
-where question_id in
-    ( select question_id
+where questions_id in
+    ( select questions_id
     from replies group by questions_id)
-    order by question_id asc""", None, 'dict')
-replies_question_forum_db = dbmg.query("""select *
-from replies
-join questions on questions.questions_id = replies.questions_id
-join forum_details on questions.forum_details_id = forum_details.forum_details_id
-""", None, dict)
+    order by questions_id asc""", None, 'dict')
+
+replies_question_forum = dbmg.get_replies_question_forum()
 
 dbmg.close()
 
@@ -48,10 +46,10 @@ questions = {}
 
 for question in questions_db:
     if question['content'] is not None:
-        questions[question['question_id']] = {}
-        questions[question['question_id']]['content'] = question['content']
+        questions[question['questions_id']] = {}
+        questions[question['questions_id']]['content'] = question['content']
     else:
-        logger.error('Question of ID {} has no content'.format(question['question_id']))
+        logger.error('Question of ID {} has no content'.format(question['questions_id']))
 
 
 
@@ -63,12 +61,12 @@ for reply in replies_db:
     if reply['text'] is not None:
         replies.append(reply['text'])
     else:
-        logger.error('Reply of ID {} has no text'.format(question['reply_id']))
+        logger.error('Reply of ID {} has no text'.format(reply['replies_id']))
 
 replies_by_question = {}
 
 for reply_by_question in replies_by_question_db:
-    question_id = reply_by_question['question_id']
+    question_id = reply_by_question['questions_id']
     if question_id not in replies_by_question.keys():
         replies_by_question[question_id] = {}
     if 'replies' not in replies_by_question[question_id].keys():
@@ -88,16 +86,6 @@ for reply_by_question in replies_by_question_db:
 
 
 
-replies_question_forum = {}
-for reply_question_forum in replies_question_forum_db:
-    forum_id = reply_question_forum[10]
-    if forum_id not in replies_question_forum.keys():
-        replies_question_forum[forum_id] = {}
-    question_id = reply_question_forum[4]
-    if question_id not in replies_question_forum[forum_id].keys():
-        replies_question_forum[forum_id][question_id] = {}
-        replies_question_forum[forum_id][question_id]['replies_text'] = []
-    replies_question_forum[forum_id][question_id]['replies_text'].append(reply_question_forum[1])
     #if question_id in questions.keys():
     #    print(questions[question_id]['content'])
     #print('DBD', replies_question_forum[forum_id][question_id]['replies_text'])
