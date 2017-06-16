@@ -1,4 +1,4 @@
-from InputPreprocessor import InputPreprocessor
+from NLP.InputPreprocessor import InputPreprocessor
 
 class KeywordProcessor:
     def __init__(self, doc_set):

@@ -6,10 +6,10 @@ class DatabaseManager:
         self.__cursor = self.__connection.cursor()
         self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    def my_query(self, query_string, query_data, fetch_method='array'):
-        if fetch_method == 'array':
+    def my_query(self, query_string, query_data, fetch_to_dict=0):
+        if fetch_to_dict == 0:
             curs = self.__cursor
-        elif fetch_method == 'dict':
+        elif fetch_to_dict == 1:
             curs = self.__dict_cursor
         else:
             curs = self.__cursor

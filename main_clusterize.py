@@ -1,18 +1,16 @@
-from sklearn.cluster import KMeans
-
-from ClassifierData import ClassifierData
-from DatabaseHelper import DatabaseHelper
-
 from datetime import time
-from sklearn import metrics
 
+import numpy as np
+from sklearn import metrics
+from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import HashingVectorizer, TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
-import numpy as np
+from Database.DatabaseHelper import DatabaseHelper
+from ML.ClassifierData import ClassifierData
 
 n_features = 100
 n_components = 50

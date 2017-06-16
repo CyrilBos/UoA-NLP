@@ -1,15 +1,11 @@
-from sklearn.linear_model import SGDClassifier
+import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-
+from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 
+from ML.ClassifierData import ClassifierData
 
-import numpy as np
-
-from Logger import logger
-
-from ClassifierData import ClassifierData
 
 class Classifier:
     def __init__(self, data, target, target_names):

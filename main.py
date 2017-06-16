@@ -1,13 +1,8 @@
-import nltk
-import pyLDAvis
-
 from DatabaseHelper import DatabaseHelper
-from DatabaseManager import DatabaseManager
-
 from KeywordProcessor import KeywordProcessor
-from LatentDirichletAllocation import LatentDirichletAllocation
 
 from Logger import logger
+from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 
 def RankKeywords(docs):
     kwpcsr = KeywordProcessor(docs)
@@ -29,14 +24,14 @@ def LDA(docs, topics, passes, save_filename):
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseHelper(connect_string)
-replies_db = dbmg.query("select * from replies", None, 'dict')
-questions_db = dbmg.query("select * from questions", None, 'dict')
-replies_by_question_db = dbmg.query("""select replies_id, text, questions_id
+replies_db = dbmg.my_query("select * from replies", None, fetch_to_dict=1)
+questions_db = dbmg.my_query("select * from questions", None, fetch_to_dict=1)
+replies_by_question_db = dbmg.my_query("""select replies_id, text, questions_id
 from replies
 where questions_id in
     ( select questions_id
     from replies group by questions_id)
-    order by questions_id asc""", None, 'dict')
+    order by questions_id asc""", None, fetch_to_dict=1)
 
 replies_question_forum = dbmg.get_replies_question_forum()
 

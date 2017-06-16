@@ -1,11 +1,11 @@
-from DatabaseManager import DatabaseManager
-from Classifier import Classifier
+from Database.DatabaseManager import DatabaseManager
+from ML.Classifier import Classifier
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
 questions_forum_db = dbmg.my_query(
     "select * from questions join forum_details on forum_details.forum_details_id = questions.forum_details_id", None,
-    'dict')
+    fetch_to_dict=1)
 dbmg.close()
 
 data = []

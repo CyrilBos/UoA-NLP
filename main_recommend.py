@@ -1,14 +1,14 @@
 import random
 
-from DatabaseManager import DatabaseManager
+from Database.DatabaseManager import DatabaseManager
 from Logger import logger
-from Recommender import Recommender
+from ML.Recommender import Recommender
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
-questions_db = dbmg.query(
+questions_db = dbmg.my_query(
     "select * from replies", None,
-    'dict')
+    fetch_to_dict=1)
 dbmg.close()
 
 data = {'id':[], 'description':[]}

@@ -1,11 +1,10 @@
-import pyLDAvis.gensim
-from nltk.tokenize import RegexpTokenizer
+import gensim
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-import gensim
+from nltk.tokenize import RegexpTokenizer
 
+from NLP.InputPreprocessor import InputPreprocessor
 
-from InputPreprocessor import InputPreprocessor
 
 class LatentDirichletAllocation:
     def __init__(self, doc_set):

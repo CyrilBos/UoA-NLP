@@ -1,7 +1,9 @@
-from gensim.models import word2vec
 from multiprocessing import Process
 
-from DatabaseHelper import DatabaseHelper
+from gensim.models import word2vec
+
+from Database.DatabaseHelper import DatabaseHelper
+
 
 class SimilarityComputingThread(Process):
     __docs = []
@@ -37,7 +39,7 @@ db = DatabaseHelper(connect_string)
 questions = db.get_questions_content()
 
 sentences = word2vec.Text8Corpus('text8')
-#model = word2vec.Word2Vec(questions, sg=1)
+#model = word2vec.Word2Vec(questions, sg=1, workers=8)
 
 #model = word2vec.Word2Vec(sentences)
 #model.save("dupes.model")
@@ -55,6 +57,6 @@ for question in questions:
             s1 = set(question.split()).intersection(model.wv.vocab)
             s2 = set(other_question.split()).intersection(model.wv.vocab)
             similarity = model.n_similarity(s1, s2)
-            if similarity > 0.95:
+            if similarity >= 0.95:
                 print(similarity, other_question)
 """
