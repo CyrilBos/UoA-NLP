@@ -6,12 +6,13 @@ from nltk.tokenize import RegexpTokenizer
 from NLP.InputPreprocessor import InputPreprocessor
 
 
-class LatentDirichletAllocation:
+class LatentSemanticAnalyser:
     def __init__(self, doc_set):
         self.__doc_set = doc_set
         self.__preprocessor = InputPreprocessor(doc_set)
 
-    def get_corpus_and_dictionary(self):
+
+    def compute(self, topics, save_filename):
         texts = []
 
         tokenizer = RegexpTokenizer(r'\w+')
@@ -39,20 +40,16 @@ class LatentDirichletAllocation:
         # turn our tokenized documents into a id <-> term dictionary
         dictionary = gensim.corpora.Dictionary(texts)
 
+        # convert tokenized documents into a document-term matrix
         corpus = [dictionary.doc2bow(text) for text in texts]
 
-        return corpus, dictionary
-
-    def compute(self, topics, passes, save_filename):
-
-        corpus, dictionary = self.get_corpus_and_dictionary()
         # generate LDA model
-        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=3)
+        lsi_model = gensim.models.LsiModel(corpus, num_topics=topics, id2word=dictionary)
 
-        save_filename += "_{}_{}".format(topics, passes)
+        save_filename += "_{}".format(topics)
 
         dictionary.save(save_filename + ".dict")
         gensim.corpora.MmCorpus.save_corpus(save_filename + ".mm", corpus, id2word=dictionary)
-        ldamodel.save(save_filename + ".model")
+        lsi_model.save(save_filename + ".model")
 
-        return ldamodel, corpus, dictionary
+        return lsi_model, corpus, dictionary
