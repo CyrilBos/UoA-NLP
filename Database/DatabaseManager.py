@@ -7,9 +7,9 @@ class DatabaseManager:
         self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     def my_query(self, query_string, query_data, fetch_to_dict=0):
-        if fetch_to_dict == 0:
+        if not fetch_to_dict:
             curs = self.__cursor
-        elif fetch_to_dict == 1:
+        elif fetch_to_dict:
             curs = self.__dict_cursor
         else:
             curs = self.__cursor

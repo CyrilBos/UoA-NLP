@@ -8,7 +8,7 @@ connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
 questions_db = dbmg.my_query(
     "select * from replies", None,
-    fetch_to_dict=1)
+    fetch_to_dict=True)
 dbmg.close()
 
 data = {'id':[], 'description':[]}

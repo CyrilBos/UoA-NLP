@@ -10,7 +10,7 @@ class DatabaseHelper(DatabaseManager):
         from replies
         join questions on questions.questions_id = replies.questions_id
         join forum_details on questions.forum_details_id = forum_details.forum_details_id
-        """, None, fetch_to_dict=1)
+        """, None, fetch_to_dict=True)
         replies_question_forum = {}
         for reply_question_forum in replies_question_forum_db:
             forum_id = reply_question_forum[10]
@@ -25,7 +25,7 @@ class DatabaseHelper(DatabaseManager):
 
     def get_forums(self):
         forums = {}
-        for forum in self.my_query('select * from forum_details', None, fetch_to_dict=1):
+        for forum in self.my_query('select * from forum_details', None, fetch_to_dict=True):
             forums[forum['forum_details_id']] = {}
             forums[forum['forum_details_id']]['name'] = forum['name']
             forums[forum['forum_details_id']]['url'] = forum['url']
@@ -35,17 +35,17 @@ class DatabaseHelper(DatabaseManager):
     def get_forums_names(self):
         forums_names = []
 
-        for forum in self.my_query('select name from forum_details', None, fetch_to_dict=1):
+        for forum in self.my_query('select name from forum_details', None, fetch_to_dict=True):
             forums_names.append(forum['name'])
 
         return forums_names
 
     def get_questions(self):
-        return self.my_query("select * from questions", None, fetch_to_dict=1)
+        return self.my_query("select * from questions", None, fetch_to_dict=True)
 
     def get_questions_content(self):
         data = []
-        questions_db = self.my_query("select * from questions", None, fetch_to_dict=1)
+        questions_db = self.my_query("select * from questions", None, fetch_to_dict=True)
 
         for question in questions_db:
             content = question[5]
@@ -61,7 +61,7 @@ class DatabaseHelper(DatabaseManager):
         questions_forum_db = self.my_query(
             "select * from questions join forum_details on forum_details.forum_details_id = questions.forum_details_id",
             None,
-            'dict')
+            fetch_to_dict=True)
 
         for question_forum in questions_forum_db:
             content = question_forum['content']

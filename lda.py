@@ -1,8 +1,10 @@
-from DatabaseHelper import DatabaseHelper
-from KeywordProcessor import KeywordProcessor
+from Database.DatabaseHelper import DatabaseHelper
+from NLP.KeywordProcessor import KeywordProcessor
 
 from Logger import logger
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
+from NLP.LatentSemanticAnalysor import LatentSemanticAnalyser
+
 
 def RankKeywords(docs):
     kwpcsr = KeywordProcessor(docs)
@@ -21,19 +23,25 @@ def LDA(docs, topics, passes, save_filename):
     lda = LatentDirichletAllocation(docs)
     return lda.compute(topics, passes, save_filename)
 
+def LSI(docs, topics, save_filename):
+    lsi = LatentSemanticAnalyser(docs)
+    return lsi.compute(topics, save_filename)
+
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseHelper(connect_string)
-replies_db = dbmg.my_query("select * from replies", None, fetch_to_dict=1)
-questions_db = dbmg.my_query("select * from questions", None, fetch_to_dict=1)
+replies_db = dbmg.my_query("select * from replies", None, fetch_to_dict=True)
+questions_db = dbmg.my_query("select * from questions", None, fetch_to_dict=True)
 replies_by_question_db = dbmg.my_query("""select replies_id, text, questions_id
 from replies
 where questions_id in
     ( select questions_id
     from replies group by questions_id)
-    order by questions_id asc""", None, fetch_to_dict=1)
+    order by questions_id asc""", None, fetch_to_dict=True)
 
 replies_question_forum = dbmg.get_replies_question_forum()
+
+questions_content = dbmg.get_questions_content()
 
 dbmg.close()
 
@@ -49,8 +57,6 @@ for question in questions_db:
 
 
 replies = []
-
-print(replies_db)
 
 for reply in replies_db:
     if reply['text'] is not None:
@@ -68,6 +74,8 @@ for reply_by_question in replies_by_question_db:
         replies_by_question[question_id]['replies'] = []
 
     replies_by_question[question_id]['replies'].append(reply_by_question['text'])
+
+
 
 
 #for question in replies_by_question:
@@ -90,11 +98,13 @@ for reply_by_question in replies_by_question_db:
 
 # print(RankKeywords(replies))
 #LDA(questions, "lda_questions")
-for forum in replies_question_forum:
-    texts = []
-    for question in replies_question_forum[forum]:
-        for reply_text in replies_question_forum[forum][question]['replies_text']:
-            texts.append(reply_text)
-    lda, crps, dict = LDA(texts, 100, 20, "lda-saves/lda_replies_question_forum_{}".format(forum))
+#for forum in replies_question_forum:
+    #texts = []
+    #for question in replies_question_forum[forum]:
+    #    for reply_text in replies_question_forum[forum][question]['replies_text']:
+    #        texts.append(reply_text)
+    #lda, crps, dict = LDA(texts, 100, 20, "lda-saves/lda_replies_question_forum_{}".format(forum))
 
     #print(lda.print_topics(num_topics=-1, num_words=-1))
+
+lsi, crps, dict = LSI(questions_content, 400, 'lda-saves/lsi-questions')

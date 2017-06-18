@@ -5,7 +5,7 @@ connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
 questions_forum_db = dbmg.my_query(
     "select * from questions join forum_details on forum_details.forum_details_id = questions.forum_details_id", None,
-    fetch_to_dict=1)
+    fetch_to_dict=True)
 dbmg.close()
 
 data = []

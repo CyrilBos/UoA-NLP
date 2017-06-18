@@ -37,7 +37,7 @@ class SimilarityComputingThread(Process):
 connect_string = "dbname=uoa-nlp user=admin"
 db = DatabaseHelper(connect_string)
 
-questions_db = db.my_query("select questions_id, content from questions", None, fetch_to_dict=1)
+questions_db = db.my_query("select questions_id, content from questions", None, fetch_to_dict=True)
 
 questions_content = []
 tagged_questions = []
