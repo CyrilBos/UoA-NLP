@@ -14,14 +14,27 @@ from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 from ML.ClassifierData import ClassifierData
 
 
-"""
-This class uses KMeans to compute clusters of text documents and extract their features either using
-- IDF with an hashing option
-- an LDA topics representation of the set of documents
-"""
+
 class Clusterizer:
+    """
+    This class uses KMeans to compute clusters of text documents and extract their features either using
+    - IDF with an hashing option
+    - an LDA topics representation of the set of documents
+    """
+
     def __init__(self, data, target, target_names, n_features=100, n_components=0, use_hashing=False, use_idf=True,
                  verbose=True):
+        """
+        init function for the clusterizer
+
+        :param data: the text documents
+        :type data: Union[list, tuple]
+        :param target: is an array or tuple that holds the index of each document to the labels
+        (target[0]=0 means the first data comes from the first target)
+        :type target: Union[list, tuple]
+        :param target_names: is an array ro tuple that holds the labels names (i.e the forums names)
+        :type target_names: Union[list, tuple]
+        """
         self.__dataset = ClassifierData(data, target, target_names)
         print("%d documents" % len(self.__dataset.data))
         print("%d categories" % len(self.__dataset.target_names))
@@ -92,8 +105,8 @@ class Clusterizer:
 
             print()
 
-        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=100, n_init=1,
-                    verbose=self.__verbose)
+        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=100, n_init=10,
+                    verbose=self.__verbose, n_jobs=8)
 
         print("Clustering sparse data with %s" % km)
         km.fit(X)
@@ -115,6 +128,15 @@ class Clusterizer:
                     print()
 
         return km, X
+
+    def get_metrics(self, km, X):
+        return  metrics.homogeneity_score(self.__labels, km.labels_), \
+                metrics.completeness_score(self.__labels, km.labels_), \
+                metrics.v_measure_score(self.__labels, km.labels_), \
+                metrics.adjusted_rand_score(self.__labels, km.labels_), \
+                metrics.silhouette_score(X, km.labels_, sample_size=1000)
+
+
 
     def print_metrics(self, km, X):
         print("Homogeneity: %0.3f" % metrics.homogeneity_score(self.__labels, km.labels_))

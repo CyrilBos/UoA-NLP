@@ -14,7 +14,7 @@ class Classifier:
                              ('tfidf', TfidfTransformer()),
                              ('clf', SGDClassifier(alpha=.0001, n_iter=50,
                                                    penalty='l2')),
-                             ])
+                            ])
 
         self.__text_clf = text_clf.fit(self.__clf_data.data, self.__clf_data.target)
 
