@@ -6,7 +6,7 @@ from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 from NLP.LatentSemanticAnalysor import LatentSemanticAnalyser
 
 
-def RankKeywords(docs):
+def rankKeywords(docs):
     kwpcsr = KeywordProcessor(docs)
 
     words_occurences = kwpcsr.count_keywords()
@@ -23,7 +23,7 @@ def LDA(docs, topics, passes, save_filename):
     lda = LatentDirichletAllocation(docs)
     return lda.compute(topics, passes, save_filename)
 
-def LSI(docs, topics, save_filename):
+def LSA(docs, topics, save_filename):
     lsi = LatentSemanticAnalyser(docs)
     return lsi.compute(topics, save_filename)
 
@@ -107,4 +107,4 @@ for reply_by_question in replies_by_question_db:
 
     #print(lda.print_topics(num_topics=-1, num_words=-1))
 
-lsi, crps, dict = LSI(questions_content, 400, 'lda-saves/lsi-questions')
+lsi, crps, dict = LSA(questions_content, 400, 'lda-saves/lsi-questions')
