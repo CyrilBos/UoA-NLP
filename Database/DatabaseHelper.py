@@ -53,7 +53,7 @@ class DatabaseHelper(DatabaseManager):
                 data.append(content)
         return data
 
-    def get_questions_by_forum(self):
+    def get_questions_titles_by_forum(self):
         data = []
         target = []
         target_names = []
@@ -64,7 +64,7 @@ class DatabaseHelper(DatabaseManager):
             fetch_to_dict=True)
 
         for question_forum in questions_forum_db:
-            content = question_forum['content']
+            content = question_forum['text']
             if question_forum['name'] not in target_names:
                 target_names.append(question_forum['name'])
             if content is not None:
