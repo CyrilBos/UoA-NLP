@@ -60,3 +60,148 @@ We are wondering if these expenses can be pushed through to Xero via the API.
 My understanding is that these are not Expense Claims assigned to a user, but are more general business expenses which are recorded differently.
 We're a bit lost on how to proceed - part of the problem of course is that we're not accountants and may be taking the wrong approach!
 Appreciate any advice."]
+
+
+
+
+
+[(45062, 'Does anyone else find the new .Net library difficult to use?',
+"I find the new .Net library extremely unintuitive and convoluted.
+Even looking at the example implementations it is not a quick or easy thing to tease out the best way to implement and utilise this myself.
+The 'old' .Net library was more straightforward I think.
+I look forward to a straightforward library with straightforward example code of how to implement it.
+IMHO, 9 arguments for a constructor is too many (see PartnerMvcAuthenticator in the example code)."
+),
+(47098, 'Exchange RequestToken to AccessToken',
+'Hello, I\'ve got problem when trying to exchange request token to access token (sending request to /oauth/AccessToken).
+First step was completed successfuly and I redirected myself to /APIAuthorise.aspx page, where I authorized my app to access my account.
+After redirecting me back to callback url I always get "oauth_problem=signature_invalid&oauth_problem_advice=Failed%20to%20validate%20signature" response from /oauth/AccessToken.
+Here are data I send and receive:This code is provided by the developer community - Xero does not warrant it in any wayI\'m pretty sure that signature is made correctly -
+I use OAuthSimple class provided in one of Xero`s code samples.
+Full sample works correctly, the problem appears when I try to attach the library into our application.
+It\'s the newest version available.
+EDIT: Sorry for the look of gist - could make it better.'),
+(45761, 'HTTP GET Request for Contact with double quote in name of Contact',
+'Hi,I am using the Xero API and sending a HTTP GET request from my application to Xero to return Contacts that match a certain Name.
+So...using instructions from http://developer.xero.com/documentation/getting-started/http-requests-and-responses/#title3, I send (for example) Name="A Company Ltd" urlencoded as part of the URL.
+This works fine, until I search on a Name that includes a double quote in it.
+Does anyone know how to get it to work and Xero to not return an error when a double quote exists?
+I know it\'s highly unlikely that a Name would have a double quote in it, but it\'s always best to make an application as robust as possible in my opinion, no matter how unlikely.
+Many thanks in advance.Cheers,Rhyd.'),
+(45185, 'Filter By Date Range using xero.php',
+"I'm trying to return all Invoices for June 2013, NOT just those that have been changed since a certain date.
+I can see how the API documentation handles this situation, it says to use the following value for the where parameter
+(from http://developer.xero.com/api-overview/http-requests-and-responses/#get-filtered):
+FullyPaidOnDate >= DateTime(2011, 10, 01) AND FullyPaidOnDate <= DateTime(2011, 10, 30)
+However I'd like to use the useful xero.php wrapper if possible.
+After reading the github page and various discussions on here as well as the code, it looks to me as if the filter I should be setting is as follows (ie the 'value' of the array item is itself an array made up of operand, literal value):
+$aFilter = array(\t'Date' => array('>=','DateTime(2013, 06, 01)')\t,'Date' => array('<=','DateTime(2013, 06, 30)'));$result = $xero->Invoices('','',$aFilter,'');
+However this results in the following error:
+Array(    [ErrorNumber] => 16    [Type] => QueryParseException    [Message] => Operator '<=' incompatible with operand types 'DateTime?' and 'String')
+Also of course as the field name is the array key, I only end up with one array item not two as you can see in the array dump:
+Array(    [Date] => Array        (            [0] => <=            [1] => DateTime(2013,06,30)        ))
+Any help that you can offer would be appreciated."),
+(46680, 'New solution for integration based on SSIS',
+"Dear Sirs,This question is targeted toward Xero support people and administrators.
+I was not able to find answer to my question, so I have to post my question here.
+COZYROC is the leading provider of third-party components for Microsoft SQL Server Integration Services.
+We have recently included adapters which support the Xero application.
+We would like to ask what information you need from us so you can post details about COZYROC's solution here:https://developer.xero.com/code-samples/tools/overview/
+Thank you for your time in advance!"), (
+45763, 'Creating Method Functions',
+'Hi all. I\'m a newbie web developer and also new to xero api.
+What I am asking is simple. How to create the function for a GET/POST request for invoices?
+I have looked at the api previwer, understand the xml but how to implement the "run" button function? What the script looks like?
+Any sample code to look at including a submit button?'),
+(44963, 'Validation error Exception not thrown but BadRequest Exception instead.',
+'I have been uploading Timesheets to Xero successfully in an application in C# for over 12 months.
+With the latest revision of the app (no changes to the codeline used for the Timesheets upload), I am no longer able to do the uploads and am getting a BadRequest exception raised.
+The detail merely shows "A validation exception occurred".
+I have the Api.Timesheets.Create in a try/catch block, with three separate catch blocks.
+The first of these is:catch (Xero.Api.Infrastructure.Exception.ValidationException vE){.....}but this is not trapping.
+The second catch block is for BadRequestException and that traps.
+How can I then determine the actual Validation errors?
+The full ValidationException block contains::\terrStore += "Validation errors from xero:\\r\\n";\tforeach (var v in vE.ValidationErrors)\t{\t\terrStore += v.Message + "\\r\\n";\t\tAppGlobals.logger.Error("Error: TS Upload error" + v.Message + "\\r\\n");\t}
+but with that not being trapped how can I find the errors?
+Why does the BadRequest exception supersede the ValidationException, or are there multiple exceptions occurring?
+It makes life fairly difficult when my client cannot determine what has gone wrong without my having to get into debug mode on a production system.
+Eric Whitchurch'),
+(46916, 'Force expire token (for testing purposes)',
+'Hi,I would like to know if there is a way to force expire the token?
+I want to test my application against different scenarios so it will be great if we can "induce" token expiration instead of having to wait 30 minutes for it to systematically expire.
+I am using a public application and official PHP Xero API wrapper.
+Thanks!'),
+ (44426, 'Email TLD Numeric character validation issues',
+'Why is it that Xero will not accept an email address with numeric characters in the TLD either by API or manual Contact entry?
+There are TLDs which have numeric character in them listed on IANA - http://data.iana.org/TLD/tlds-alpha-by-domain.txt  (scroll down to .XN domains).
+(encoded as "xn--mgberp4a5d4ar") ("al-Saudiah") in Arabic Script,which is registered to the Saudi Network Information Centre
+I get thrown this error via API:Error: 10 ValidationException A validation exception occurred Email address must be valid. Email address must be valid.
+Thanks.'),
+(46159, 'payroll and invoicing',
+"Hi,I have a web app that requires invoicing, inventory and payroll access to insert timesheets.
+Have got it working using the core api Version 2 & have got hold of the payroll DotNet sample (which looks to be the same as the core api sample with a console payroll section).
+Anyway the example doesn't show the situation where I wan to use both api's...i.e I want to process invoices using the core api and then turn the page to payroll and insert time-sheets.
+Do I have to log out of 1 and log into the other?
+Can I use the same access token to create both payroll and core repositories?
+Any examples of the above in DotNet?")]
+
+
+
+
+
+
+[(45917, 'Cannot search Super Funds by USI property',
+'Hi,The Australian Payroll API was recently updated to include USI (unique superannuation identifier).
+I have an external system I connect to Xero that tries to match a super fund based on SPIN/USI, and I cannot search by USI via the API.
+When I to find a Super Fund via the API by querying on the new USI field, and it keeps returning an error "USI property is not supported for Where or Order clause".
+I can query by other fields e.g. SPIN Example query: /payroll.xro/1.0/SuperFunds?Where=USI%3D%3D%22TLS0100AU%22
+API exception returned: USI property is not supported for Where or Order clause
+Can anyone help?'),
+(46105, 'Account could not be found error',
+'I am getting reports from users of an error "Account could not be found" when sending their sales to Xero via the API.
+It appears that the accounts they are sending to exist, is there anything else that can cause this error?'),
+ (46599, 'Developer Required to integrate with inventory tool',
+ 'Hey!We are looking for a highly experianced developer who has is well versed in Ruby On Rails to intergrate veeqo.com with Xero.
+ So that Veeqo.com clients can export their sales invoices/purchase orders/COGS to Xero.
+ Preferably someone who has experience of doing something similar would be great.'),
+ (45852, 'Setting the Branding theme',
+ 'Hi,How do I  set the Branding theme when creating a new invoice using BrandingThemeId?
+ How do I find the GUID that is related to the theme I want to use?'),
+ (46022, 'Rules being using Contact matching when creating an invoice',
+ "Hi Guys, I just noticed something that might been little strange or also might be by design.
+ when creating an invoice i include the contact record details (no guid) full details, this normally either creates a new contact or finds and existing one.
+ during testing i noticed that one of the contact matched even thou the company name was different.
+ it then updated the contact and changed the company name.
+ Edited \t26 Jun 2014 3:20 p.m. \tSystem Generated \tName changed from 'OLD COMPANY' to 'NEW COMPANY'.
+ personally would have expected the new company to be created not some existing company updated.
+ Can you please let me rules that are used for matching contacts as for some of the records i am processing i might have to create a contact in a separate call and pass in the guid instead.
+ particularly if a customer has multiple businesses operating from the same location.
+ ThanksPaul"),
+ (45787, 'inserting/updating UpdatedDateUTC value',
+ "How can I add the parameter UpdatedDateUTC with the object to Xero?
+ I'm trying to get invoices from one system to Xero but with the other system's modified_dates.
+ I'm adding it with the XML object but it does not seem to make any difference.
+ Example object object:SimpleXMLElement Object(    <Invoice> => SimpleXMLElement Object        (            <InvoiceID> => 4fa68953-c4cc-4c5e-ab64-5e9f38b6e0f5            <Type> => ACCREC            <Contact> => SimpleXMLElement Object                (                    <ContactID> => 85d15bf3-207f-4278-8449-e12dade98c66                )            <Date> => 2015-07-06            <DueDate> => 2015-07-06            <InvoiceNumber> => INV-0031            <CurrencyCode> => USD            <CurrencyRate> => 1.000000000000000            <Status> => AUTHORISED            <SentToContact> => false            <SubTotal> => 59.85            <TotalTax> => 5.24            <Total> => 65.09            <LineAmountTypes> => Exclusive            <UpdatedDateUTC> => 2015-07-06T13:10:46            <LineItems> => SimpleXMLElement Object                (                    <LineItem> => SimpleXMLElement Object                        (                            <AccountCode> => 200                            <TaxType> => TAX001                            <Description> => 'Fish out of Water: Finding Your Brand                            <Quantity> => 3.0000                            <UnitAmount> => 19.9500                            <ItemCode> => BOOK                            <TaxAmount> => 5.236875                            <LineAmount> => 59.85                            <DiscountRate> => 0.0000                        )                )        ))"),
+  (44624, 'Sandbox environment',
+  'Hi there,At the moment we use the demo environment.
+  However have three problems with it.
+  One of them is that it does not contain our production data and the second one is that it expires after 30 days.
+  The third problem is that it is bound to one account, which makes it harder for the developers to share one demo environment to test.
+  Does Xero support a sandbox environment or an environment which is a copy of production?
+  Or is it possible to keep the demo environment alive for more then 30 days, including the sharing of the demo account?
+  Thanks and Regards,Keethanjan'),
+  (46320, 'Limit max number of results in GET request',
+  'I\'m wondering if there is any way to limit the number of results returned--for example, an equivalent to "SELECT TOP 100" in SQL.We intend to create about 800 invoices per month via the API, and all of them will be created on the same day and have the same invoice date and due date, so I don\'t think we could use any date fields or "if modified since" to limit the results.
+  When issuing a GET request on these, ideally, we\'d be able to split it up into 8 different API calls; i.e.
+  in the following pseudo code:\tRequest 1 of 8: Get the top 100 records where invoice date is 2012-04-02T00:00:00 order by UpdatedDateUTC\tRequest 2 of 8: Get the top 100 records where invoice date is 2012-04-02T00:00:00 and UpdatedDateUTC > (the last UpdatedDateUTC in Request 1) order by UpdatedDateUTC\tAnd so on, until there are no more records retrieved.\t
+  Is there any way either to limit the records returned or some other way to split up this request into multiple API calls?'),
+  (46662, 'Wanted - Xero Developer for simple Job Sheet add-on',
+  'I am looking for a Xero Developer who can create a simple job sheet add-on for my creative company.
+  Will start as a simple job sheet but will no doubt grow into something bigger as my business grows.
+  Very keen to discuss with anyone that can help.'),
+  (44469, 'Linking Linnworks and Xero',
+  'Hi,I am looking for an integration between Xero and Linnworks
+  We want to be able to exact invoices from Linnworks and pass them to Xero daily through an API integration.
+  The invoices passed from the two system will include the following details:1. Invoice Date 2. Invoice Number 3. Contact Name 4. Contact Address 5. Reference Number 6. Product Description 7. Product Quantity 8. Product Price 9. Currency 10. Delivery Cost 11. Sales Account 12. Tax Type
+  My client has a budget of £250 to £400 for the work
+  ThanksMark')]
