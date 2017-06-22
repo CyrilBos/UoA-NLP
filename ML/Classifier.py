@@ -12,7 +12,7 @@ class Classifier:
         self.__clf_data = ClassifierData(data, target, target_names)
         text_clf = Pipeline([('vect', CountVectorizer()),
                              ('tfidf', TfidfTransformer()),
-                             ('clf', SGDClassifier(alpha=.0001, n_iter=50,
+                             ('clf', SGDClassifier(alpha=.0001, n_iter=100,
                                                    penalty='l2')),
                             ])
 

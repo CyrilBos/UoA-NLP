@@ -1,6 +1,7 @@
+import numpy as np
+
 import lda
 
-import numpy as np
 from gensim import matutils
 from sklearn import metrics
 from sklearn.cluster import KMeans
@@ -44,6 +45,7 @@ class Clusterizer:
 
         self.__n_features = n_features
         self.__n_components = n_components
+
         self.__use_hashing = use_hashing
         self.__use_idf = use_idf
         self.__verbose = verbose
