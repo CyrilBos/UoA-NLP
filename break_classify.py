@@ -11,16 +11,20 @@ from ML.Recommender import Recommender
 
 
 dbmg = DatabaseHelper(connection_string)
+#retrieves the training data set
 questions_sentences = dbmg.my_query(
     "select * from training_data join training_data_categories on training_data_categories.training_data_categories_id = training_data.training_data_categories_id", None,
     fetch_to_dict=True)
 
+#retrieves the training data set categories
 categories = dbmg.my_query('select * from training_data_categories order by training_data_categories_id', None, fetch_to_dict=True)
 
 questions = dbmg.get_questions_content()
 
 dbmg.close()
 
+
+### Prepare the Classifier data ###
 data = []
 target = []
 target_names = []
@@ -32,9 +36,13 @@ for question_sentence in questions_sentences:
     data.append(question_sentence['content'])
     target.append(question_sentence['training_data_categories_id'])
 
+###################################
+
 forum_question_classifier = Classifier(data, target, target_names)
 
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision())
+
+### predict the category of every question, appending it into the corresponding list of the dictionary ###
 
 predicted_categories = {'context':[], 'problem':[], 'code':[], 'question':[], 'outroduction':[]}
 
@@ -48,7 +56,10 @@ for category in predicted_categories:
     for i in range(10):
         print(predicted_categories[category][i])
 
+##########################################################################################################
 
+
+### Compute and print clusters ###
 cluster_data = {'context':[], 'problem':[], 'code':[], 'question':[], 'outroduction':[]}
 cluster_target = {'context':[], 'problem':[], 'code':[], 'question':[], 'outroduction':[]}
 cluster_target_names = []
@@ -102,11 +113,5 @@ for category in predicted_categories:
             print(recommend_data['description'][recommend_data['id'].index(int(recommended_item[1]))])
 
     category_i += 1
-
-
-
-
-
-
 
 #clusterizer.print_metrics(km, X)

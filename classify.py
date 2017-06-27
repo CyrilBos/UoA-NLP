@@ -11,6 +11,7 @@ dbmg.close()
 data = []
 target = []
 target_names = []
+
 for question_forum in questions_forum_db:
     content = question_forum['content']
     if question_forum['name'] not in target_names:

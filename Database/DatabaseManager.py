@@ -1,12 +1,32 @@
 import psycopg2, psycopg2.extras
 
 class DatabaseManager:
+    """
+    Simple class using psycopg to allow retrieving data into dictionaries and not only lists.
+    """
     def __init__(self, connect_string):
+        """
+        Initializes a new DatabaseManager instance with the given connection string.
+        :param connect_string: provides database connection details : db name, user, password, ...
+        :type connect_string: st
+        """
         self.__connection = psycopg2.connect(connect_string)
         self.__cursor = self.__connection.cursor()
         self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    def my_query(self, query_string, query_data, fetch_to_dict=0):
+    def my_query(self, query_string, query_data, fetch_to_dict=False):
+        """
+        Queries the prepared statement query_string with associated query_data through a Cursor if fetch_to_dict=False
+        or through a DictCursor if True
+        :param query_string: SQL prepared statement
+        :type query_string: str
+        :param query_data: data to fill query_string (may be None if query_string does not have parameters to be filled)
+        :type query_data: list
+        :param fetch_to_dict: if True the results will be returned as a dictionary, else as a list
+        :type fetch_to_dict: bool
+        :return: all the results from the executed query
+        :rtype: Union[list,dict]
+        """
         if not fetch_to_dict:
             curs = self.__cursor
         elif fetch_to_dict:
@@ -17,6 +37,9 @@ class DatabaseManager:
         return curs.fetchall()
 
     def close(self):
+        """
+        Manually closes the cursors and the connection to the database.
+        """
         self.__connection.close()
         self.__cursor.close()
         self.__dict_cursor.close()

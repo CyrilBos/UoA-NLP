@@ -2,10 +2,25 @@ from Database.DatabaseManager import DatabaseManager
 
 
 class DatabaseHelper(DatabaseManager):
+    """
+    Class that inherits from DatabaseManager to extend it with data preprocessing functions used several times in other
+    files.
+    """
     def __init__(self, connect_str):
+        """
+        A DatabaseHelper instance must be initialized with a connection string containing the database name and user.
+        :param connect_str: provides database connection details : db name, user, password, ...
+        :type connect_str: str
+        """
         super(DatabaseHelper, self).__init__(connect_str)
 
+
     def get_replies_question_forum(self):
+        """
+        Retrieves all replies, groups them by question, and groups the questions by forum
+            :return: returns the grouped data
+            :rtype: dict
+        """
         replies_question_forum_db = self.my_query("""select *
         from replies
         join questions on questions.questions_id = replies.questions_id
@@ -24,6 +39,11 @@ class DatabaseHelper(DatabaseManager):
         return replies_question_forum
 
     def get_forums(self):
+        """
+        Retrieves the forums details and returns them in a dictionary.
+        :return: returns the forums details (id, name, url)
+        :rtype: dict
+        """
         forums = {}
         for forum in self.my_query('select * from forum_details', None, fetch_to_dict=True):
             forums[forum['forum_details_id']] = {}
@@ -33,6 +53,11 @@ class DatabaseHelper(DatabaseManager):
         return forums
 
     def get_forums_names(self):
+        """
+        Retrieves and returns the forum names in a list.
+        :return: the forum names
+        :rtype: list
+        """
         forums_names = []
 
         for forum in self.my_query('select name from forum_details', None, fetch_to_dict=True):
@@ -41,9 +66,19 @@ class DatabaseHelper(DatabaseManager):
         return forums_names
 
     def get_questions(self):
+        """
+        Retrieves and returns the questions in a dictionary.
+        :return: returns the questions from the database
+        :rtype: dict
+        """
         return self.my_query("select * from questions", None, fetch_to_dict=True)
 
     def get_questions_content(self):
+        """
+        Retrieves only the content of the questions and returns them in an list.
+        :return: returns the contents of every question.
+        :rtype: list
+        """
         data = []
         questions_db = self.my_query("select * from questions", None, fetch_to_dict=True)
 
@@ -54,6 +89,13 @@ class DatabaseHelper(DatabaseManager):
         return data
 
     def get_questions_titles_by_forum(self):
+        """
+        Retrieves the questions grouped by forum and returns a tuple of lists used in some ML algorithms
+        :return: returns a tuple of lists, the first one contains the contents of the questions, the second the forum index
+         for each question, the third the forum names (used as classifying labels called "target")
+        :rtype: tuple
+        """
+
         data = []
         target = []
         target_names = []

@@ -5,12 +5,19 @@ from sklearn.metrics.pairwise import linear_kernel
 
 
 class Recommender:
+    """
+    Class that uses content-based algorithm to recommend similar documents.
+    """
     SIMKEY = 'p:smlr:%s'
 
     def __init__(self):
         self.__r = redis.Redis(unix_socket_path='/tmp/redis.sock')
 
     def train(self, ds):
+        """
+        Trains the Recommender with the given data (ds parameter).
+        :param ds: dataset to train the recommender on
+        """
         ds = pd.DataFrame(ds)
         tf = TfidfVectorizer(analyzer='word',
                                      ngram_range=(1, 3),
@@ -34,15 +41,14 @@ class Recommender:
 
     def predict(self, item_id, num):
         """
-        Couldn't be simpler! Just retrieves the similar items and
-        their 'score' from redis.
+        Retrieves the similar items and their 'score' from redis.
 
-        :param item_id: string
+        :param item_id: id of the item to look for similar items
+        :type item_id: int
         :param num: number of similar items to return
-        :return: A list of lists like: [["19", 0.2203],
-        ["494", 0.1693], ...]. The first item in each sub-list is
-        the item ID and the second is the similarity score. Sorted
-        by similarity score, descending.
+        :type num: int
+        :return: A list of lists, the first item in each sub-list is the item ID and the second is the similarity score.
+        Sorted by descending similarity score.
         """
 
         return self.__r.zrange(Recommender.SIMKEY % item_id,

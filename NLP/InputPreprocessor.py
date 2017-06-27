@@ -2,7 +2,15 @@ import nltk
 from nltk.corpus import stopwords
 
 class InputPreprocessor:
+    """
+    Class that preprocesses documents using NLTK chunker, lemmatizer, stemmer and stop-words.
+    """
     def __init__(self, doc_set):
+        """
+        Initializes the new InputPreprocessor instance with the given set of documents.
+        :param doc_set: set of documents
+        :type doc_set: list
+        """
         self.__doc_set = doc_set
 
         self.__grammar = r"""
@@ -27,10 +35,11 @@ class InputPreprocessor:
             yield subtree.leaves()
 
     def stem(self, word):
+        """Stems the given word."""
         return self.__stemmer.stem(word)
 
     def normalise(self, word):
-        """Normalises words to lowercase and stems and lemmatizes it."""
+        """Normalises words by lowercasing, stemming and lemmatizing it."""
         word = word.lower()
         word = self.__stemmer.stem(word)
         word = self.__lemmatizer.lemmatize(word)
@@ -43,15 +52,25 @@ class InputPreprocessor:
         return accepted
 
     def get_terms(self, tree):
+        """Get the terms from the given tree."""
         for leaf in self.leaves(tree):
             term = [self.normalise(w) for w, t in leaf if self.acceptable_word(w)]
             yield term
 
     def tokenize(self, doc):
+        """Process the given doc and returns its tokens.
+        :return: the processed tokens
+        :rtype: list
+        """
         return nltk.regexp_tokenize(doc, self.__sentence_re)
 
 
     def preprocess_terms(self):
+        """
+        Preprocess the terms in the set of documents using the above functions.
+        :return: the processed terms
+        :rtype: list
+        """
         doc_terms = []
         for doc in self.__doc_set:
             #print('Preprocessing terms of following content:')

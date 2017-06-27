@@ -7,6 +7,9 @@ from NLP.InputPreprocessor import InputPreprocessor
 
 
 class SimilarityComputingThread(Process):
+    """
+    Class to be instantiated 8 times to compute the similarity faster.
+    """
     __docs = []
     __id = -1
     __model = None
@@ -44,6 +47,8 @@ tagged_questions = []
 
 tokenizer = InputPreprocessor(None)
 
+###tokenize the data before applying the model
+
 for question in questions_db:
     if question['content'] is not None:
         questions_content.append(question['content'])
@@ -52,7 +57,9 @@ for question in questions_db:
 
 
 model = doc2vec.Doc2Vec(documents=tagged_questions, workers=8)
+##############################################
 
+### compute the similarity of each question with every other question ###
 for content in questions_content:
     print("NEW QUESTION", content)
     for other_content in questions_content:

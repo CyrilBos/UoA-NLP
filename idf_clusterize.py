@@ -7,6 +7,7 @@ db = DatabaseHelper(connection_string)
 
 data, target, target_names = db.get_questions_titles_by_forum()
 
+###Clusterization
 clusterizer = KMeansClusterizer(data, target, target_names, use_idf=True)
 
 n_clusters = 2000
@@ -19,9 +20,10 @@ for cluster_num in km.labels_:
     i+=1
 
 n=0
-
+################
 save_file = open('idf_clusters_{}.txt'.format(n_clusters), 'w')
 
+### Print the clusters ###
 for cluster in clusters:
     if len(cluster) > 1:
         print('CLUSTER {}'.format(n))
@@ -31,4 +33,5 @@ for cluster in clusters:
             save_file.write(doc + '\n')
     n+=1
 
+#print metrics
 clusterizer.print_metrics(km, x)

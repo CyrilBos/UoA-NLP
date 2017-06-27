@@ -7,11 +7,25 @@ from NLP.InputPreprocessor import InputPreprocessor
 
 
 class LatentDirichletAllocation:
+    """
+    Implementation of the LDA algorithm to extract topic from a given set of documents.
+    """
     def __init__(self, doc_set):
+        """
+        Initalizes the new LDA instance with the given set of documents.
+        :param doc_set: set of documents
+        :type doc_set: list
+        """
         self.__doc_set = doc_set
         self.__preprocessor = InputPreprocessor(doc_set)
 
     def get_corpus_and_dictionary(self):
+        """
+        Preprocess the set of documents to compute then return the corpus and the related dictionary.
+        :return: a tuple (corpus, dictionary). corpus is the bag of words representation of the documents
+        and dictionary translates ids into terms.
+        :rtype: tuple
+        """
         texts = []
 
         tokenizer = RegexpTokenizer(r'\w+')
@@ -44,6 +58,18 @@ class LatentDirichletAllocation:
         return corpus, dictionary
 
     def compute(self, topics, passes, save_filename):
+        """
+        Preprocess the set of documents into a BOW representation and then
+        computes the LDA model and returns it along with the corpus and dictionary.
+        :param topics: number of wanted topics
+        :type topics: int
+        :param passes: number of times the algorithm will be executed
+        :type passes: int
+        :param save_filename: filename to save the model to
+        :type save_filename: str
+        :return: a tuple (model, corpus, dictionary)
+        :rtype: tuple
+        """
 
         corpus, dictionary = self.get_corpus_and_dictionary()
         # generate LDA model

@@ -1,6 +1,6 @@
 from Database.DatabaseHelper import DatabaseHelper
 from Database.Configuration import connection_string
-from NLP.KeywordProcessor import KeywordProcessor
+from NLP.KeywordExtractor import KeywordExtractor
 
 from Logger import logger
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
@@ -8,7 +8,14 @@ from NLP.LatentSemanticAnalysor import LatentSemanticAnalyser
 
 
 def rankKeywords(docs):
-    kwpcsr = KeywordProcessor(docs)
+    """
+    Sorts the extracted keywords from docs by frequency and returns the result
+    :param docs: documents
+    :type docs: list
+    :return: sorted words by frequency
+    :rtype: list
+    """
+    kwpcsr = KeywordExtractor(docs)
 
     words_occurences = kwpcsr.count_keywords()
 
@@ -45,6 +52,8 @@ questions_content = dbmg.get_questions_content()
 
 dbmg.close()
 
+###Preprocess the data
+
 questions = {}
 
 for question in questions_db:
@@ -77,6 +86,7 @@ for reply_by_question in replies_by_question_db:
 
 
 
+######################
 
 #for question in replies_by_question:
     #replies_by_question[question]['replies_keywords'] = RankKeywords(replies_by_question[question]['replies'])
@@ -92,6 +102,7 @@ for reply_by_question in replies_by_question_db:
     #if question_id in questions.keys():
     #    print(questions[question_id]['content'])
     #print('DBD', replies_question_forum[forum_id][question_id]['replies_text'])
+
 
 
 #RankKeywords(questions)

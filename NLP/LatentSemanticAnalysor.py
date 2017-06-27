@@ -8,11 +8,26 @@ from NLP.InputPreprocessor import InputPreprocessor
 
 class LatentSemanticAnalyser:
     def __init__(self, doc_set):
+        """
+       Initalizes the new LSA instance with the given set of documents.
+       :param doc_set: set of documents
+       :type doc_set: list
+       """
         self.__doc_set = doc_set
         self.__preprocessor = InputPreprocessor(doc_set)
 
 
     def compute(self, topics, save_filename):
+        """
+        Preprocess the set of documents into a BOW representation and then
+        computes the LSA model and returns it along with the corpus and dictionary.
+        :param topics: number of wanted topics
+        :type topics: int
+        :param save_filename: filename to save the model to
+        :type save_filename: str
+        :return: a tuple (model, corpus, dictionary)
+        :rtype: tuple
+        """
         texts = []
 
         tokenizer = RegexpTokenizer(r'\w+')
