@@ -1,12 +1,16 @@
-from Database.DatabaseHelper import DatabaseHelper
-from ML.Classifier import Classifier
+import random
 
 from nltk.tokenize import sent_tokenize
 
-from ML.Clusterizer import Clusterizer
+from Database.DatabaseHelper import DatabaseHelper
+from Database.Configuration import connection_string
 
-connect_string = "dbname=uoa-nlp user=admin"
-dbmg = DatabaseHelper(connect_string)
+from ML.Classifier import Classifier
+from ML.KMeansClusterizer import KMeansClusterizer
+from ML.Recommender import Recommender
+
+
+dbmg = DatabaseHelper(connection_string)
 questions_sentences = dbmg.my_query(
     "select * from training_data join training_data_categories on training_data_categories.training_data_categories_id = training_data.training_data_categories_id", None,
     fetch_to_dict=True)
@@ -45,42 +49,64 @@ for category in predicted_categories:
         print(predicted_categories[category][i])
 
 
-cluster_data = []
-cluster_target = []
+cluster_data = {'context':[], 'problem':[], 'code':[], 'question':[], 'outroduction':[]}
+cluster_target = {'context':[], 'problem':[], 'code':[], 'question':[], 'outroduction':[]}
 cluster_target_names = []
 category_i = 0
 
+question_recommender = Recommender()
+
 for category in predicted_categories:
-    cluster_target_names.append(category)
+    #cluster_target_names.append(category)
     for sentence in predicted_categories[category]:
-        cluster_data.append(sentence)
-        cluster_target.append(category_i)
+        cluster_data[category].append(sentence)
+        cluster_target[category].append(category_i)
+    n_clusters = int(len(cluster_data[category]) / 3)
+    clusterizer = KMeansClusterizer(cluster_data[category], cluster_target[category], [category], n_features=10)
+
+    km, X = clusterizer.idf_clusterize(n_clusters=n_clusters)
+
+    clusters = [[] for dummy in range(n_clusters)]
+    i = 0
+    for cluster_num in km.labels_:
+        clusters[cluster_num].append(cluster_data[category][i])
+        i += 1
+
+    n = 0
+
+    save_file = open('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), 'w')
+
+    for cluster in clusters:
+        if len(cluster) > 1:
+            print('CLUSTER {}'.format(n))
+            save_file.write('CLUSTER {}\n'.format(n))
+            for doc in cluster:
+                print(doc)
+                save_file.write(doc + '\n')
+        n += 1
+
+    recommend_data = {'id':[], 'description':[]}
+
+    for i in range(len(cluster_data[category])):
+        recommend_data['id'].append(i)
+        recommend_data['description'].append(cluster_data[category][i])
+
+    question_recommender.train(recommend_data)
+
+    rnd = random.randint(0, 20)
+    for item_to_recommend_index in range(rnd, rnd + rnd):
+        print("Current item: ", recommend_data['description'][item_to_recommend_index])
+        recommended_items = question_recommender.predict(recommend_data['id'][item_to_recommend_index], 5)
+        print("Recommended items: ")
+        for recommended_item in recommended_items:
+            print(recommend_data['description'][recommend_data['id'].index(int(recommended_item[1]))])
+
     category_i += 1
 
 
-clusterizer = Clusterizer(cluster_data, cluster_target, cluster_target_names, n_features=10)
 
-n_clusters = 4000
 
-km, X = clusterizer.idf_clusterize(n_clusters=n_clusters)
 
-clusters = [[] for dummy in range(n_clusters)]
-i=0
-for cluster_num in km.labels_:
-    clusters[cluster_num].append(cluster_data[i])
-    i+=1
 
-n=0
-
-save_file = open('broken_idf_clusters_{}.txt'.format(n_clusters), 'w')
-
-for cluster in clusters:
-    if len(cluster) > 1:
-        print('CLUSTER {}'.format(n))
-        save_file.write('CLUSTER {}\n'.format(n))
-        for doc in cluster:
-            print(doc)
-            save_file.write(doc + '\n')
-    n+=1
 
 #clusterizer.print_metrics(km, X)

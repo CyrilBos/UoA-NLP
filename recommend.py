@@ -1,11 +1,11 @@
 import random
 
+from Database.Configuration import connection_string
 from Database.DatabaseManager import DatabaseManager
 from Logger import logger
 from ML.Recommender import Recommender
 
-connect_string = "dbname=uoa-nlp user=admin"
-dbmg = DatabaseManager(connect_string)
+dbmg = DatabaseManager(connection_string)
 questions_db = dbmg.my_query(
     "select * from replies", None,
     fetch_to_dict=True)

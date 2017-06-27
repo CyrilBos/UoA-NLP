@@ -1,4 +1,5 @@
 from Database.DatabaseHelper import DatabaseHelper
+from Database.Configuration import connection_string
 from NLP.KeywordProcessor import KeywordProcessor
 
 from Logger import logger
@@ -28,8 +29,7 @@ def LSA(docs, topics, save_filename):
     return lsi.compute(topics, save_filename)
 
 
-connect_string = "dbname=uoa-nlp user=admin"
-dbmg = DatabaseHelper(connect_string)
+dbmg = DatabaseHelper(connection_string)
 replies_db = dbmg.my_query("select * from replies", None, fetch_to_dict=True)
 questions_db = dbmg.my_query("select * from questions", None, fetch_to_dict=True)
 replies_by_question_db = dbmg.my_query("""select replies_id, text, questions_id

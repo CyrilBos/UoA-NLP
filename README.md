@@ -1,8 +1,8 @@
 # UoA-NLP
 
 ##Dependencies
-- nltk, don't forget to run nltk.download() and install all packages
-- postgresql
+- NLTK, don't forget to run nltk.download() and install all packages
+- PostgreSQL
 - pyscopgl
 - gensim for LDA/LSA
 - IPython (IPyKernel, Jupyter)

@@ -1,12 +1,13 @@
 from Database.DatabaseHelper import DatabaseHelper
-from ML.Clusterizer import Clusterizer
+from Database.Configuration import connection_string
 
-connect_string = 'dbname=uoa-nlp user=admin'
-db = DatabaseHelper(connect_string)
+from ML.KMeansClusterizer import KMeansClusterizer
+
+db = DatabaseHelper(connection_string)
 
 data, target, target_names = db.get_questions_titles_by_forum()
 
-clusterizer = Clusterizer(data, target, target_names, use_idf=True)
+clusterizer = KMeansClusterizer(data, target, target_names, use_idf=True)
 
 n_clusters = 2000
 km, x = clusterizer.idf_clusterize(n_clusters=n_clusters)
