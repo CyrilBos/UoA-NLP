@@ -3,7 +3,7 @@ from Database.DatabaseHelper import DatabaseHelper
 
 db = DatabaseHelper(connection_string)
 
-print(db.my_query('select questions_id, text, content from questions where questions_id not in (select distinct questions_id from training_data) order by random() limit 10', None))
+print(db.my_query('select question_id, text, content from question where question_id not in (select distinct question_id from training_data) order by random() limit 10', None))
 exit()
 
 questions_sentences = []
@@ -159,8 +159,8 @@ questions_sentences.append({
 id = db.my_query('select max(training_data_id) from training_data', None)[0][0] + 1
 for question_sentences in questions_sentences:
     for sentence in question_sentences['sentences']:
-        category_id = db.my_query('select training_data_categories_id from training_data_categories where category_name = %s', [sentence[1]])[0][0]
-        print('insert into training_data(training_data_id, content, training_data_categories_id, questions_id) values({}, \'{}\', {}, {});'.format(id, sentence[0], category_id, question_sentences['question_id']))
+        category_id = db.my_query('select training_data_category_id from training_data_category where category_name = %s', [sentence[1]])[0][0]
+        print('insert into training_data(training_data_id, content, training_data_category_id, questions_id) values({}, \'{}\', {}, {});'.format(id, sentence[0], category_id, question_sentences['question_id']))
         id+=1
 
 

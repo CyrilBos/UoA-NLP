@@ -23,8 +23,8 @@ class DatabaseHelper(DatabaseManager):
         """
         replies_question_forum_db = self.my_query("""select *
         from replies
-        join questions on questions.questions_id = replies.questions_id
-        join forum_details on questions.forum_details_id = forum_details.forum_details_id
+        join question on question.question_id = replies.question_id
+        join forum_details on question.forum_details_id = forum_details.forum_details_id
         """, None, fetch_to_dict=True)
         replies_question_forum = {}
         for reply_question_forum in replies_question_forum_db:
@@ -71,7 +71,7 @@ class DatabaseHelper(DatabaseManager):
         :return: returns the questions from the database
         :rtype: dict
         """
-        return self.my_query("select * from questions", None, fetch_to_dict=True)
+        return self.my_query("select * from question", None, fetch_to_dict=True)
 
     def get_questions_content(self):
         """
@@ -80,7 +80,7 @@ class DatabaseHelper(DatabaseManager):
         :rtype: list
         """
         data = []
-        questions_db = self.my_query("select * from questions", None, fetch_to_dict=True)
+        questions_db = self.my_query("select * from question", None, fetch_to_dict=True)
 
         for question in questions_db:
             content = question[5]
@@ -101,7 +101,7 @@ class DatabaseHelper(DatabaseManager):
         target_names = []
 
         questions_forum_db = self.my_query(
-            "select * from questions join forum_details on forum_details.forum_details_id = questions.forum_details_id",
+            "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id",
             None,
             fetch_to_dict=True)
 

@@ -13,11 +13,11 @@ from ML.Recommender import Recommender
 dbmg = DatabaseHelper(connection_string)
 #retrieves the training data set
 questions_sentences = dbmg.my_query(
-    "select * from training_data join training_data_categories on training_data_categories.training_data_categories_id = training_data.training_data_categories_id", None,
+    "select * from training_data join training_data_category on training_data_category.training_data_category_id = training_data.training_data_category_id", None,
     fetch_to_dict=True)
 
 #retrieves the training data set categories
-categories = dbmg.my_query('select * from training_data_categories order by training_data_categories_id', None, fetch_to_dict=True)
+categories = dbmg.my_query('select * from training_data_category order by training_data_category_id', None, fetch_to_dict=True)
 
 questions = dbmg.get_questions_content()
 
@@ -34,7 +34,7 @@ for category in categories:
 
 for question_sentence in questions_sentences:
     data.append(question_sentence['content'])
-    target.append(question_sentence['training_data_categories_id'])
+    target.append(question_sentence['training_data_category_id'])
 
 ###################################
 

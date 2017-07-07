@@ -37,14 +37,14 @@ def LSA(docs, topics, save_filename):
 
 
 dbmg = DatabaseHelper(connection_string)
-replies_db = dbmg.my_query("select * from replies", None, fetch_to_dict=True)
-questions_db = dbmg.my_query("select * from questions", None, fetch_to_dict=True)
-replies_by_question_db = dbmg.my_query("""select replies_id, text, questions_id
-from replies
-where questions_id in
-    ( select questions_id
-    from replies group by questions_id)
-    order by questions_id asc""", None, fetch_to_dict=True)
+replies_db = dbmg.my_query("select * from reply", None, fetch_to_dict=True)
+questions_db = dbmg.my_query("select * from question", None, fetch_to_dict=True)
+replies_by_question_db = dbmg.my_query("""select reply_id, text, question_id
+from reply
+where question_id in
+    ( select question_id
+    from replyvgroup by question_id)
+    order by question_id asc""", None, fetch_to_dict=True)
 
 replies_question_forum = dbmg.get_replies_question_forum()
 
@@ -58,10 +58,10 @@ questions = {}
 
 for question in questions_db:
     if question['content'] is not None:
-        questions[question['questions_id']] = {}
-        questions[question['questions_id']]['content'] = question['content']
+        questions[question['question_id']] = {}
+        questions[question['question_id']]['content'] = question['content']
     else:
-        logger.error('Question of ID {} has no content'.format(question['questions_id']))
+        logger.error('Question of ID {} has no content'.format(question['question_id']))
 
 
 
@@ -71,12 +71,12 @@ for reply in replies_db:
     if reply['text'] is not None:
         replies.append(reply['text'])
     else:
-        logger.error('Reply of ID {} has no text'.format(reply['replies_id']))
+        logger.error('Reply of ID {} has no text'.format(reply['reply_id']))
 
 replies_by_question = {}
 
 for reply_by_question in replies_by_question_db:
-    question_id = reply_by_question['questions_id']
+    question_id = reply_by_question['question_id']
     if question_id not in replies_by_question.keys():
         replies_by_question[question_id] = {}
     if 'replies' not in replies_by_question[question_id].keys():

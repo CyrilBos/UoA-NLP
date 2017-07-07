@@ -40,7 +40,7 @@ class SimilarityComputingThread(Process):
 connect_string = "dbname=uoa-nlp user=admin"
 db = DatabaseHelper(connect_string)
 
-questions_db = db.my_query("select questions_id, content from questions", None, fetch_to_dict=True)
+questions_db = db.my_query("select question_id, content from question", None, fetch_to_dict=True)
 
 questions_content = []
 tagged_questions = []
@@ -53,7 +53,7 @@ for question in questions_db:
     if question['content'] is not None:
         questions_content.append(question['content'])
         tokens = tokenizer.tokenize(question['content'])
-        tagged_questions.append(doc2vec.TaggedDocument(words=tokens, tags=[question['questions_id']]))
+        tagged_questions.append(doc2vec.TaggedDocument(words=tokens, tags=[question['questiony_id']]))
 
 
 model = doc2vec.Doc2Vec(documents=tagged_questions, workers=8)
