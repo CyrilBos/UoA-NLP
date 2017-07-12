@@ -3,11 +3,72 @@ from Database.DatabaseHelper import DatabaseHelper
 
 db = DatabaseHelper(connection_string)
 
-print(db.my_query('select question_id, text, content from question where question_id not in (select distinct question_id from training_data) order by random() limit 10', None))
+print(db.my_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit 20", None))
 exit()
 
 questions_sentences = []
 
+questions_sentences.append({
+    'question_id': 125435,
+    'sentences': (
+        ('I have just completed my first financial year, and am confused about how to account for Corporation Tax in Xero.',
+         'context'),
+        ('I have submitted my tax return and just paid the tax due to HMRC.',
+         'context'),
+        ('I have reconciled the bank transaction so that now I have an Expense sitting against account 500 - Corporation Tax.',
+         'context'),
+        ('In my Profit and Loss for 2016-17, the expense against code 500 is now shown as an operating expense and reduces down the net profit for the year.',
+         'problem'),
+        ('Is there any way of separately showing net profit BEFORE tax (and having the Corporation Tax expense sitting between net profit BEFORE tax and net profit AFTER tax?).',
+         'question'),
+        ('Thanks,Ben',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 137779,
+    'sentences': (
+        ('I have completed all of the payroll enrolment details in Payroll settings but Xero is not selecting any staff to be included in auto enrolment.',
+         'problem'),
+        ('All of them are eligible by my reckoning but none are selected.',
+         'problem'),
+        ('On the Employee tab under Eligibility Status the box is greyed out.',
+         'problem'),
+        ('I am clearly missing something but after assessing this forum and the videos I am no clearer what I am missing.',
+         'problem'),
+        ('Could somebody suggest what I am missing.',
+         'question'),
+        ('ThanksAndy',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 136222,
+    'sentences': (
+        ('Hi all.Im a new Xero user and trying to create my first invoice.',
+         'context'),
+        ("All good except the invoice isn't showing my bank account details so I can get paid by EFT.",
+         'problem'),
+        ('On the Employee tab under Eligibility Status the box is greyed out.',
+         'problem'),
+        ('I am clearly missing something but after assessing this forum and the videos I am no clearer what I am missing.',
+         'problem'),
+        ('Could somebody suggest what I am missing.',
+         'question'),
+        ('ThanksAndy',
+         'outroduction')
+    )
+})
+
+for question_sentences in questions_sentences:
+    for sentence in question_sentences['sentences']:
+        category_id = db.my_query('select training_data_category_id from training_data_category where category_name = %s', [sentence[1]])[0][0]
+        ('insert into training_data(training_data_id, content, training_data_category_id, questions_id) values({}, \'{}\', {}, {});'.format(id, sentence[0], category_id, question_sentences['question_id']))
+        id+=1
+
+"""#DEVELOPER COMMUNITY DATA
 questions_sentences.append({
     'question_id': 45917,
     'sentences': (
@@ -155,15 +216,7 @@ questions_sentences.append({
     )
 })
 
-
-id = db.my_query('select max(training_data_id) from training_data', None)[0][0] + 1
-for question_sentences in questions_sentences:
-    for sentence in question_sentences['sentences']:
-        category_id = db.my_query('select training_data_category_id from training_data_category where category_name = %s', [sentence[1]])[0][0]
-        print('insert into training_data(training_data_id, content, training_data_category_id, questions_id) values({}, \'{}\', {}, {});'.format(id, sentence[0], category_id, question_sentences['question_id']))
-        id+=1
-
-
+"""
 """
 questions_sentences.append({
     'question_id': 45062,
