@@ -121,3 +121,6 @@ class DatabaseHelper(DatabaseManager):
                 target.append(target_names.index(question_forum['name']))
 
         return data, target, target_names
+
+    def get_training_data(self, community_name='Business'):
+        pass

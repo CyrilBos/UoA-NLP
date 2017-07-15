@@ -238,7 +238,8 @@ One thing that i would like to see is the credit invoices issued by suppliers to
 As a lot of our credit notes do not correspond with invoices from the supplier and it then becomes difficult for suppliers to match off our invoices from our remittances.
 Also the fact that each time you load an invoice onto a supplier that has a credit note, a reminder comes up that there is a credit note available,
     this in turn seems to stop the flow of creating another bill.
-as it takes you to that invoice if you dont allocate this credit.Looking forward to your reply'),
+as it takes you to that invoice if you dont allocate this credit.
+Looking forward to your reply'),
 (136180, 'New Expense Account',
 'i just added new expense account, in the drop down list on Expense claim>Current Claim›New Receipt>account
     the list on expense does not include the new expense account i just created.'),
@@ -335,7 +336,7 @@ Is it possible to put through a bad debt differently, such a journal entry, on a
 We want to still be able to send statements etc, if requested, but adding a credit note to the invoices means that we are not able to do this as they're down as 'paid'."),
 (128746, 'Quickest way to find a transaction based on contact',
 "Hi thereWe don't raise Xero invoices for our occasional suppliers, instead we'll simply create the transactions at reconciliation time,
-    adding a new contact as necessary.My question is -  what's the easiest way to search for these transactions by contact name?
+    adding a new contact as necessary. My question is -  what's the easiest way to search for these transactions by contact name?
 I had a case this morning where I needed to quickly add a file to a historical transaction for a known contact and I had to do the following:- Start at the dashboard.
     - Click on Accounts -> Bank Accounts- Click the correct bank account.- Click the 'Transactions' tab.- Click 'Search', enter the contact name.
     - Click the appropriate transaction from the list that appears.

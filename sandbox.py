@@ -3,8 +3,8 @@ from Database.DatabaseHelper import DatabaseHelper
 
 db = DatabaseHelper(connection_string)
 
-print(db.my_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit 20", None))
-exit()
+#print(db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit 20", None))
+#exit()
 
 questions_sentences = []
 
@@ -51,22 +51,322 @@ questions_sentences.append({
          'context'),
         ("All good except the invoice isn't showing my bank account details so I can get paid by EFT.",
          'problem'),
-        ('On the Employee tab under Eligibility Status the box is greyed out.',
-         'problem'),
-        ('I am clearly missing something but after assessing this forum and the videos I am no clearer what I am missing.',
-         'problem'),
-        ('Could somebody suggest what I am missing.',
+        ('How can this be added to the standard template?',
          'question'),
-        ('ThanksAndy',
+        ('I have entered the details into the financial section.',
+         'context'),
+        ("I have searched the boards here for an answer and can't seem to find one.",
+         'context'),
+        ('Thanks!',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 128095,
+    'sentences': (
+        ('HI I have been using xero for 6 months and on the whole it is fantastic.',
+         'context'),
+        ("One thing that i would like to see is the credit invoices issued by suppliers to be able to be manually ticked against a payment rather than allocating it to another invoice.",
+         'problem'),
+        ('As a lot of our credit notes do not correspond with invoices from the supplier and it then becomes difficult for suppliers to match off our invoices from our remittances.',
+         'problem'),
+        ('Also the fact that each time you load an invoice onto a supplier that has a credit note, a reminder comes up that there is a credit note available,',
+         'problem'),
+        ("this in turn seems to stop the flow of creating another bill, as it takes you to that invoice if you dont allocate this credit.",
+         'problem'),
+        ('Looking forward to your reply',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 136180,
+    'sentences': (
+        ('i just added new expense account, in the drop down list on Expense claim>Current Claim›New Receipt>account',
+         'context'),
+        ("the list on expense does not include the new expense account i just created.",
+         'problem')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 138215,
+    'sentences': (
+        ('We have had several issues trying to finalize last weeks pay. 40 Staff.',
+         'context'),
+        ("We have had Marc@Xero replying and we have made comments to him.",
+         'context'),
+        ('He has to their credit come back to us.',
+         'context'),
+        ('All be it late and we made our own interpretations.',
+         'context'),
+        ("We been me and our accountancy vCFO.",
+         'context'),
+        ('Finally getting last weeks payroll up to day (having to Process through the old system last week.)',
+         'context'),
+        ('We hit the process button and it is frozen.',
+         'problem'),
+        ("The button just won't move.",
+         'problem'),
+        ('We are told there was an update this morning after an issue fot more than 25 staff in payroll.0,',
+         'context'),
+        ('We have give Marc access.',
+         'context')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 135066,
+    'sentences': (
+        ("Hi,I have reconciled also bank statement for past financial year from 1st April 2015 to 31st March 2016. I usually run monthly profit and loss reports.",
+         'context'),
+        ("However, for the final month of March the P&L report shows me as final conversion balances for the year ended March 2016 rather than the individual March month income and expenses.",
+         'problem'),
+        ('Any help and ideas appreciated on this topic. Ash',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 135142,
+    'sentences': (
+        ('I am struggling to sort out the best way to handle reconciling two transactions I have in Xero.',
+         'context'),
+        ("I have two separate vendors who issued partial refunds after a purchase was made.",
+         'context'),
+        ('One was because we were charged too much for shipping and the other because we were charged for an upgrade that we did not end up using.',
+         'context'),
+        ('Both of the original expenses were one off expenses paid via credit card and do not have associated bills.',
+         'context'),
+        ("They were just reconciled along with other bank transactions.",
+         'context'),
+        ('How do I handle the refunds?',
+         'question'),
+        ('They don\'t seem to be overpayments, and I don\'t have a bill to create a credit note against.',
+         'problem'),
+        ("I could create bills but is that a best practice?",
+         'question'),
+        ('If I just choose to reconcile it and label is as "vendor refund" is it categorized as an asset or as revenue?',
+         'question'),
+        ('Any guidance would be very much appreciated. Thanks!',
+         'context')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 126593,
+    'sentences': (
+        ('Hi there — I am starting a business that is pretty straightforward wholesale distribution.',
+         'context'),
+        ("Payments will mostly come in via check, but many customers will pay via credit card.",
+         'context'),
+        ('I love the idea of being able to email an invoice to a customer with a big PAY NOW button, which will let them simply input their CC details secureley and pay their invoice.',
+         'context'),
+        ('This is a new venture for me, though, and I\'m admittedly ignorant on the details and variables I should be considering when making this.',
+         'problem'),
+        ("Which service should I integrate?",
+         'question'),
+        ('How do the services that integrate with Xero compare to setting up Merchant Services through my bank?',
+         'question'),
+        ('Would appreciate any guidance regarding how I might go about thinking about this problem and coming up with a good solution."),',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 126082,
+    'sentences': (
+        ('Hi there,We use Capital On Tap as a regular loans service.',
+         'context'),
+        ("There is no option for bank feeds and the loan is paid in as and when we require it (almost like a transfer from a separate account with a loan limit).",
+         'context'),
+        ('We then have to pay back a minimum amount every month depending on the cumulative total we have loaned at the end of that month so the amount is never fixed, always variable.',
+         'context'),
+        ('I ideally want to record the capital we have received (ad hoc), the amount we have paid back (monthly) and the interest as an expense.',
+         'context'),
+        ("The loan was started before we began using Xero so I realise I will need to enter a conversion balance.",
+         'context'),
+        ('But I was wondering if anyone had any idea on how to go about recording the payments in, the repayments out and the interest.',
+         'question'),
+        ('Would I need to create two accounts, one for loan and one for loan interest?',
+         'question'),
+        ('I hope this makes sense and thanks in advance for any help or light you can shed on this.',
+         'outroduction'),
+        ('Many thanks,Joe',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 139105,
+    'sentences': (
+        ('I\'m just starting to reconcile after adding Kounta integration, and am not sure how to handle cash purchases made from the cash register.',
+         'context'),
+        ("If a supplier is paid cash on delivery from the till, the deducted cash is recorded as \"cash out\" showing the reduced cash in the till.",
+         'context'),
+        ('How do I record this invoice paid by cash in Xero?',
+         'question'),
+        ('The Kounta integration only shows the reduced cash in "cash register clearing account", not the COGS account.',
+         'problem'),
+        ("When you receive a purchase order in Kounta it doesn\'t appear to allow you to specify how the invoice was paid.",
+         'problem'),
+        ('Thanks,Christie',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 127624,
+    'sentences': (
+        ('I have been using Xero for a couple of years and absolutely love it.',
+         'context'),
+        ("However I have a major problem today in that one of my clients is now registered for the Flat Rate Scheme at 12%.",
+         'problem'),
+        ('When I generate the VAT Return every box is coming up 0.00.',
+         'problem'),
+        ('Can anyone help ?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 137054,
+    'sentences': (
+        ('I am currently looking for a quicker and more accurate way to report my super contributions.',
+         'context'),
+        ("We currently use CBUS clearing account however the CSV file they require every month is not downloadable from Xero.",
+         'problem'),
+        ('Does anyone else upload a file direct from Xero to a clearing house?',
+         'question'),
+        ('I tried to use the auto option in Xero through Click Super but as I need receipts to send to customers and neither Click or Xero can offer any reporting this is a dead end.',
+         'problem'),
+        ("Any suggestions?",
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 139449,
+    'sentences': (
+        ('We currently use Xero and are now in the process of finding a suitable POS and Stock control system.',
+         'context'),
+        ("Ideally the POS system we would like touch screen based suitable for staff with limited computer skills or even iPad as we"
+         "    could operate with more than one sales counter Our stock is varied from standard hardware / building lines  through to Animal health and stock feed,"
+         "so we need to be able to sell in the same item in different formats. bulk and per metre / or per KG  or single units."
+         "We do run monthly accounts for customers as well.",
+         'context'),
+        ('we previously tried myob retail manager - and it failed as it was far to complex',
+         'problem')
+    )
+})
+questions_sentences.append({
+    'question_id': 134058,
+    'sentences': (
+        ('"HiWe have some suppliers who have up to 70 invoices required for paymentTo avoid having to enter these all individually we create one purchase for the supplier,',
+         'context'),
+        ("and in the body of the purchase, enter all the invoices. Of course we are unable to list every invoice number in the reference box, so we call it by the month of statement.",
+         'context'),
+        ('It makes it very easy then to identity, pick up & batch all bills that need to be paid at the end of the month, as they all have the same reference.',
+         'context'),
+        ('This works fine for us, but we do get requests from our suppliers as to what invoices we are paying, as the remittance only says \'April 17 Statement\'.',
+         'problem'),
+        ("Is there anyway to send a remittance with the body of the purchase showing?",
+         'question'),
+        ('Are we purchasing incorrectly?',
+         'question'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138923,
+    'sentences': (
+        ('Hi,I run a staff temping agency and hire out my staff to other businesses.',
+         'context'),
+        ("Is there a Xero connected app that allows the clients to approve time-sheets online?",
+         'question'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 134874,
+    'sentences': (
+        ('Hi, I was asked to run an aged receivables report for 90 days and older (retentions of 5-10%)',
+         'context'),
+        ("but when I did there were invoices showing up as outstanding but when you drill into them it's been paid and the outstanding amount is $0",
+         'problem'),
+        ('Has anyone had this issue before?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 125232,
+    'sentences': (
+        ('"I have been advised by our accountant to put through a number of invoices from a client as a \'bad debt\'.',
+         'context'),
+        ("I followed the forum posts and set up the account code and put through as credit notes but I'm told this isn't what they want.",
+         'problem'),
+        ('Is it possible to put through a bad debt differently, such a journal entry, on an accrual scheme so that we can claim the VAT back but still'
+         'leave the invoices open in case we do eventually get payments in?',
+         'question'),
+        ('We want to still be able to send statements etc, if requested, but adding a credit note to the invoices means that we are not able to do this as they\'re down as \'paid\',',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 128746,
+    'sentences': (
+        ('"Hi thereWe don\'t raise Xero invoices for our occasional suppliers, instead we\'ll simply create the transactions at reconciliation time,'
+         'adding a new contact as necessary.',
+         'context'),
+        ("My question is -  what's the easiest way to search for these transactions by contact name?",
+         'question'),
+        ('I had a case this morning where I needed to quickly add a file to a historical transaction for a known contact and I had to do the following:- Start at the dashboard.'
+         '- Click on Accounts -> Bank Accounts- Click the correct bank account.- Click the \'Transactions\' tab.- Click \'Search\', enter the contact name.'
+         'Click the appropriate transaction from the list that appears.',
+         'context'),
+        ('That\'s quite laborious and also involves knowing which bank account the transaction belongs to.',
+         'problem'),
+        ("What am I missing here?",
+         'question'),
+        ('I tried, instead, to do it via the \'Contacts\' page, searched and found the correct contact, but there didn\'t seem to be a link to click through and view all'
+         'transactions associated with that contact.',
+         'problem'),
+        ('Frustratingly, I could see a bar graph, visualising the transaction amounts, but no obvious way to view them.',
+         'problem')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 135892,
+    'sentences': (
+        ('Hi,This is a more general question about physical inventory management and not necessarily related to Xero'
+         'but I figure that this is probably a good place to ask as I can\'t be the only person selling physical products',
+         'context'),
+        ("My business is wholesale alcohol business and we have to do regular inventory counts in our multiple warehouses.",
+         'context'),
+        ('At the moment this is done manually on paper and then transferred to excel.',
+         'context'),
+        ('I would like to move to a more automated system where the person doing the inventory count scans a product barcode and types in the number of items in the warehouse.',
+         'context'),
+        ("If this can be achieved with a barcode scanner that links wirelessly to an app on a tablet or phone it would be great.",
+         'context'),
+        ('I\'ve been trying to find suitable products to do this but haven\'t yet found the right solution.',
+         'problem'),
+        ('How do other people handle this?',
+         'question'),
+        ('Are there any hardware / software solutions out there that you would recommend?',
+         'question'),
+        ('Thanks!Harold',
          'outroduction')
     )
 })
 
 for question_sentences in questions_sentences:
     for sentence in question_sentences['sentences']:
-        category_id = db.my_query('select training_data_category_id from training_data_category where category_name = %s', [sentence[1]])[0][0]
-        ('insert into training_data(training_data_id, content, training_data_category_id, questions_id) values({}, \'{}\', {}, {});'.format(id, sentence[0], category_id, question_sentences['question_id']))
-        id+=1
+        print(sentence[1])
+        print(question_sentences['question_id'])
+        category_id = db.select_query('select training_data_category_id from training_data_category where category_name = %s', (sentence[1],), fetch_to_dict=False)[0]
+        db.insert_query('insert into training_data(content, training_data_category_id, question_id) values(%s, %s, %s)', (sentence[0], category_id, question_sentences['question_id']))
 
 """#DEVELOPER COMMUNITY DATA
 questions_sentences.append({
