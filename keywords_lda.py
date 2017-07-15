@@ -37,9 +37,9 @@ def LSA(docs, topics, save_filename):
 
 
 dbmg = DatabaseHelper(connection_string)
-replies_db = dbmg.my_query("select * from reply", None, fetch_to_dict=True)
-questions_db = dbmg.my_query("select * from question", None, fetch_to_dict=True)
-replies_by_question_db = dbmg.my_query("""select reply_id, text, question_id
+replies_db = dbmg.select_query("select * from reply", None, fetch_to_dict=True)
+questions_db = dbmg.select_query("select * from question", None, fetch_to_dict=True)
+replies_by_question_db = dbmg.select_query("""select reply_id, text, question_id
 from reply
 where question_id in
     ( select question_id

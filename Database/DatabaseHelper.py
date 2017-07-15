@@ -15,17 +15,21 @@ class DatabaseHelper(DatabaseManager):
         super(DatabaseHelper, self).__init__(connect_str)
 
 
-    def get_replies_question_forum(self):
+    def get_community_id(self, community_name):
+        return self.select_query('select community_id from community where community_name = %s', community_name)[0]
+
+    def get_replies_question_forum(self, community_name='Business'):
         """
         Retrieves all replies, groups them by question, and groups the questions by forum
             :return: returns the grouped data
             :rtype: dict
         """
-        replies_question_forum_db = self.my_query("""select *
+        replies_question_forum_db = self.select_query("""select *
         from replies
         join question on question.question_id = replies.question_id
         join forum_details on question.forum_details_id = forum_details.forum_details_id
-        """, None, fetch_to_dict=True)
+        where community_id = %s
+        """, self.get_community_id(community_name), fetch_to_dict=True)
         replies_question_forum = {}
         for reply_question_forum in replies_question_forum_db:
             forum_id = reply_question_forum[10]
@@ -38,57 +42,59 @@ class DatabaseHelper(DatabaseManager):
             replies_question_forum[forum_id][question_id]['replies_text'].append(reply_question_forum[1])
         return replies_question_forum
 
-    def get_forums(self):
+    def get_forums(self, community_name='Business'):
         """
         Retrieves the forums details and returns them in a dictionary.
         :return: returns the forums details (id, name, url)
         :rtype: dict
         """
         forums = {}
-        for forum in self.my_query('select * from forum_details', None, fetch_to_dict=True):
+        for forum in self.select_query('select * from forum_details where community_id = %s', self.get_community_id(community_name), fetch_to_dict=True):
             forums[forum['forum_details_id']] = {}
             forums[forum['forum_details_id']]['name'] = forum['name']
             forums[forum['forum_details_id']]['url'] = forum['url']
 
         return forums
 
-    def get_forums_names(self):
+    def get_forums_names(self, community_name='Business'):
         """
         Retrieves and returns the forum names in a list.
         :return: the forum names
         :rtype: list
         """
+        forums = self.get_forums_names()
         forums_names = []
-
-        for forum in self.my_query('select name from forum_details', None, fetch_to_dict=True):
-            forums_names.append(forum['name'])
+        for forum in forums:
+            forums_names.append(forums[forum]['name'])
 
         return forums_names
 
-    def get_questions(self):
+    def get_questions(self, community_name='Business'):
         """
         Retrieves and returns the questions in a dictionary.
         :return: returns the questions from the database
         :rtype: dict
         """
-        return self.my_query("select * from question", None, fetch_to_dict=True)
+        return self.select_query("""select * from question join forum_details on
+                                    forum_details.forum_details_id = question.forum_details_id
+                                 where community_id = %s""", self.get_community_id(community_name), fetch_to_dict=True)
 
-    def get_questions_content(self):
+    def get_questions_content(self, community_name='Business'):
         """
         Retrieves only the content of the questions and returns them in an list.
         :return: returns the contents of every question.
         :rtype: list
         """
-        data = []
-        questions_db = self.my_query("select * from question", None, fetch_to_dict=True)
+        contents = []
+        questions_db = self.get_questions(community_name)
 
         for question in questions_db:
-            content = question[5]
+            content = questions_db[question]['content']
             if content is not None:
-                data.append(content)
-        return data
+                contents.append(content)
+        return contents
 
-    def get_questions_titles_by_forum(self):
+    def get_questions_titles_by_forum(self, community_name='Business'):
         """
         Retrieves the questions grouped by forum and returns a tuple of lists used in some ML algorithms
         :return: returns a tuple of lists, the first one contains the contents of the questions, the second the forum index
@@ -100,9 +106,10 @@ class DatabaseHelper(DatabaseManager):
         target = []
         target_names = []
 
-        questions_forum_db = self.my_query(
-            "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id",
-            None,
+        questions_forum_db = self.select_query(
+            "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id"
+            "where community_id = %s",
+            self.get_community_id(community_name),
             fetch_to_dict=True)
 
         for question_forum in questions_forum_db:

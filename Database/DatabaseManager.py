@@ -14,7 +14,7 @@ class DatabaseManager:
         self.__cursor = self.__connection.cursor()
         self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    def my_query(self, query_string, query_data, fetch_to_dict=False):
+    def select_query(self, query_string, query_data, fetch_to_dict=False):
         """
         Queries the prepared statement query_string with associated query_data through a Cursor if fetch_to_dict=False
         or through a DictCursor if True

@@ -6,7 +6,7 @@ from Logger import logger
 from ML.Recommender import Recommender
 
 dbmg = DatabaseManager(connection_string)
-questions_db = dbmg.my_query(
+questions_db = dbmg.select_query(
     "select * from replies", None,
     fetch_to_dict=True)
 dbmg.close()

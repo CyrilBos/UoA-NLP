@@ -3,7 +3,7 @@ from ML.Classifier import Classifier
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
-questions_forum_db = dbmg.my_query(
+questions_forum_db = dbmg.select_query(
     "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id", None,
     fetch_to_dict=True)
 dbmg.close()
