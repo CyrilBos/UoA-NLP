@@ -12,7 +12,7 @@ class DatabaseManager:
         """
         self.__connection = psycopg2.connect(connect_string)
         self.__cursor = self.__connection.cursor()
-        self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        self.__dict_cursor = self.__connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     def select_query(self, query_string, query_data=None, fetch_to_dict=False):
         """

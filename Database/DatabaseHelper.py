@@ -16,7 +16,7 @@ class DatabaseHelper(DatabaseManager):
 
 
     def get_community_id(self, community_name):
-        return self.select_query('select community_id from community where community_name = %s', community_name)[0]
+        return self.select_query('select community_id from community where community_name = %s', (community_name,))[0]
 
     def get_replies_question_forum(self, community_name='Business'):
         """
@@ -89,7 +89,7 @@ class DatabaseHelper(DatabaseManager):
         questions_db = self.get_questions(community_name)
 
         for question in questions_db:
-            content = questions_db[question]['content']
+            content = question['content']
             if content is not None:
                 contents.append(content)
         return contents
@@ -123,4 +123,16 @@ class DatabaseHelper(DatabaseManager):
         return data, target, target_names
 
     def get_training_data(self, community_name='Business'):
-        pass
+        training_data = self.select_query("""select training_data.content, category_name from training_data join training_data_category on training_data.training_data_category_id = training_data_category.training_data_category_id
+                        join question on question.question_id = training_data.question_id
+                        join forum_details on forum_details.forum_details_id = question.forum_details_id
+                        where community_id = %s""", self.get_community_id(community_name), fetch_to_dict=True)
+        data = []
+        target = []
+        target_names = [row[0] for row in self.select_query('select category_name from training_data_category order by 1 asc', fetch_to_dict=False)]
+
+        for row in training_data:
+            data.append(row['content'])
+            target.append(target_names.index(row['category_name']))
+
+        return data, target, target_names
