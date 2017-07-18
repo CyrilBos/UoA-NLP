@@ -17,7 +17,6 @@ class LatentDirichletAllocation:
         :type doc_set: list
         """
         self.__doc_set = doc_set
-        self.__preprocessor = InputPreprocessor(doc_set)
 
     def get_corpus_and_dictionary(self):
         """

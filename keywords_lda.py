@@ -37,36 +37,33 @@ def LSA(docs, topics, save_filename):
 
 
 dbmg = DatabaseHelper(connection_string)
-replies_db = dbmg.select_query("select * from reply", None, fetch_to_dict=True)
-questions_db = dbmg.select_query("select * from question", None, fetch_to_dict=True)
-replies_by_question_db = dbmg.select_query("""select reply_id, text, question_id
-from reply
-where question_id in
-    ( select question_id
-    from replyvgroup by question_id)
-    order by question_id asc""", None, fetch_to_dict=True)
+#replies_db = dbmg.select_query("select * from reply", None, fetch_to_dict=True)
+questions = dbmg.select_query("""select * from question join forum_details on
+                                question.forum_details_id = forum_details.forum_details_id
+                                where community_id = %s
+                              """, dbmg.get_community_id('Business'), fetch_to_dict=True)
+#replies_by_question_db = dbmg.select_query("""select reply_id, text, question_id
+#from reply
+#where question_id in
+#    ( select question_id
+#    from replyvgroup by question_id)
+#    order by question_id asc""", None, fetch_to_dict=True)
 
-replies_question_forum = dbmg.get_replies_question_forum()
-
-questions_content = dbmg.get_questions_content()
-
+#replies_question_forum = dbmg.get_replies_question_forum()
 dbmg.close()
 
-###Preprocess the data
+questions_contents = []
 
-questions = {}
-
-for question in questions_db:
-    if question['content'] is not None:
-        questions[question['question_id']] = {}
-        questions[question['question_id']]['content'] = question['content']
-    else:
-        logger.error('Question of ID {} has no content'.format(question['question_id']))
+for question in questions:
+    questions_contents.append(question['content'])
 
 
 
-replies = []
 
+
+#replies = []
+
+"""
 for reply in replies_db:
     if reply['text'] is not None:
         replies.append(reply['text'])
@@ -83,7 +80,7 @@ for reply_by_question in replies_by_question_db:
         replies_by_question[question_id]['replies'] = []
 
     replies_by_question[question_id]['replies'].append(reply_by_question['text'])
-
+"""
 
 
 ######################
@@ -98,17 +95,14 @@ for reply_by_question in replies_by_question_db:
 
 
 
+#print(rankKeywords(questions_contents))
+model, crp, dic = LDA(questions_contents, 20, 10, 'lda-saves/lsa-questions')
 
-    #if question_id in questions.keys():
-    #    print(questions[question_id]['content'])
-    #print('DBD', replies_question_forum[forum_id][question_id]['replies_text'])
-
-
-
-#RankKeywords(questions)
+for topic in model.show_topics():
+    print(topic[0], topic[1])
 
 # print(RankKeywords(replies))
-#LDA(questions, "lda_questions")
+
 #for forum in replies_question_forum:
     #texts = []
     #for question in replies_question_forum[forum]:
@@ -118,4 +112,4 @@ for reply_by_question in replies_by_question_db:
 
     #print(lda.print_topics(num_topics=-1, num_words=-1))
 
-lsi, crps, dict = LSA(questions_content, 400, 'lda-saves/lsi-questions')
+#lsi, crps, dict = LSA(questions_contents, 400, 'lda-saves/lsi-questions')
