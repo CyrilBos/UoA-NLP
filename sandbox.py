@@ -3,8 +3,8 @@ from Database.DatabaseHelper import DatabaseHelper
 
 db = DatabaseHelper(connection_string)
 
-#print(db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit 20", None))
-#exit()
+print(db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) and not in ((125279, 125317,125731,126669,127335,127449,127689,127890,130402,130542,132982,135388,135533,136533,137509,137538,138434,139243,139257,139870,) order by random() limit 200"))
+exit()
 
 questions_sentences = []
 
