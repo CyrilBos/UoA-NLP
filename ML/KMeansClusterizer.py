@@ -109,8 +109,8 @@ class KMeansClusterizer:
 
             print()
 
-        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=100, n_init=10,
-                    verbose=self.__verbose, n_jobs=-1)
+        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=5, n_init=10,
+                    verbose=self.__verbose)
 
         print("Clustering sparse data with %s" % km)
 
