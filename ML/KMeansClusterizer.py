@@ -23,8 +23,7 @@ class KMeansClusterizer:
     - LDA topics representation
     """
 
-    def __init__(self, data, target, target_names, n_features=100, n_components=0,
-                 verbose=True):
+    def __init__(self, data, target, target_names, verbose=True):
         """
         Initializes the new KMeansClusterizer instance with the given data and parameters.
 
@@ -47,57 +46,35 @@ class KMeansClusterizer:
         self.__labels = self.__dataset.target
         self.__true_k = np.unique(self.__dataset.target).shape[0]
 
-        self.__n_features = n_features
-        self.__n_components = n_components
 
         self.__verbose = verbose
 
-    def lda_clusterize(self, n_clusters, n_iter):
+    def idf_clusterize(self, n_features=10, n_components=5, n_clusters=-1, max_iter=5):
         """
-        Computes the LDA representation of the data then clusters them with the given parameters.
+        Computes the TF-IDF representation of the data then clusters them with the given parameters.
         :param n_clusters: Number of wanted clusters
         :type n_clusters: int
-        :param n_iter: Number of iterations of the clusterization
-        :type n_iter: int
+        :param max_iter: Number of iterations of the clusterization
+        :type max_iter: int
         :return: a tuple (clusters, lda model, lda vocabulary)
         :rtype: tuple
-        """
-        model = lda.LDA(n_topics=self.__n_features, n_iter=n_iter, random_state=1)
-        my_lda = LatentDirichletAllocation(self.__dataset.data)
-        corpus, vocab = my_lda.get_corpus_and_dictionary()
-
-        document_term_matrix = matutils.corpus2dense(corpus, len(vocab), len(corpus)).astype(int)
-
-        model.fit(document_term_matrix)
-        lda_rep = model.doc_topic_
-
-        kmeans = KMeans(n_clusters=n_clusters, random_state=0)
-        kmeans.fit(lda_rep)
-        return kmeans, lda_rep, vocab
-
-    def idf_clusterize(self, n_clusters=-1):
-        """
-        Computes TF-IDF vectors of the documents and clusters them using KMeans.
-        :param n_clusters: number of wanted clusters
-        :return: tuple (clusters, feature list)
         """
         if n_clusters != -1:
             self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
 
-        vectorizer = TfidfVectorizer(max_df=0.5, max_features=self.__n_features,
+        vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
                                          min_df=2, stop_words='english')
         X = vectorizer.fit_transform(self.__dataset.data)
 
         print("n_samples: %d, n_features: %d" % X.shape)
-        print()
 
-        if self.__n_components:
+        if n_components:
             print("Performing dimensionality reduction using LSA")
             # Vectorizer results are normalized, which makes KMeans behave as
             # spherical k-means for better results. Since LSA/SVD results are
             # not normalized, we have to redo the normalization.
-            svd = TruncatedSVD(self.__n_components)
+            svd = TruncatedSVD(n_components)
             normalizer = Normalizer(copy=False)
             lsa = make_pipeline(svd, normalizer)
 
@@ -109,27 +86,60 @@ class KMeansClusterizer:
 
             print()
 
-        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=5, n_init=10,
-                    verbose=self.__verbose)
+        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=10,
+                    verbose=self.__verbose, n_jobs=1)
 
         print("Clustering sparse data with %s" % km)
 
         km.fit(X)
 
-        print("Top terms per cluster:")
-
-        if self.__n_components:
+        if n_components:
             original_space_centroids = svd.inverse_transform(km.cluster_centers_)
             order_centroids = original_space_centroids.argsort()[:, ::-1]
         else:
             order_centroids = km.cluster_centers_.argsort()[:, ::-1]
 
-            terms = vectorizer.get_feature_names()
-            for i in range(self.__true_k):
-                print("Cluster %d:" % i, end='')
-                for ind in order_centroids[i, :10]:
-                    print(' %s' % terms[ind], end='')
-                print()
+        terms = vectorizer.get_feature_names()
+        for i in range(self.__true_k):
+            print("Cluster %d:" % i, end='')
+            for ind in order_centroids[i, :10]:
+                print(' %s' % terms[ind], end='')
+            print()
+
+        return km, X
+
+    def lda_clusterize(self, n_features=10, n_clusters=-1, lda_iter=5, max_iter=5):
+        """
+        Computes TF-IDF vectors of the documents and clusters them using KMeans.
+        :param n_clusters: number of wanted clusters
+        :return: tuple (clusters, feature list)
+        """
+        if n_clusters != -1:
+            self.__true_k = n_clusters
+        print("Extracting features from the training dataset using a sparse vectorizer")
+
+        lda = LatentDirichletAllocation(self.__dataset.data)
+        lda_model, corpus, vocab = lda.compute(n_features, lda_iter)
+
+        X = []
+        lda_corpus = lda_model[corpus]
+        for doc in lda_corpus:
+            scores_vector = []
+            for topic_score in doc:
+                scores_vector.append(topic_score[1])
+            while len(scores_vector) < n_features:
+                scores_vector.append(0)
+            X.append(scores_vector)
+        X = np.array(X)
+
+        print("n_samples: %d, n_features: %d" % X.shape)
+
+        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
+                    verbose=self.__verbose, n_jobs=1)
+
+        print("Clustering sparse data with %s" % km)
+
+        km.fit(X)
 
         return km, X
 

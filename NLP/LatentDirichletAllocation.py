@@ -56,7 +56,7 @@ class LatentDirichletAllocation:
 
         return corpus, dictionary
 
-    def compute(self, topics, passes, save_filename):
+    def compute(self, topics, passes, save_filename=None):
         """
         Preprocess the set of documents into a BOW representation and then
         computes the LDA model and returns it along with the corpus and dictionary.
@@ -73,11 +73,11 @@ class LatentDirichletAllocation:
         corpus, dictionary = self.get_corpus_and_dictionary()
         # generate LDA model
         ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=3)
+        if save_filename:
+            save_filename += "_{}_{}".format(topics, passes)
 
-        save_filename += "_{}_{}".format(topics, passes)
-
-        dictionary.save(save_filename + ".dict")
-        gensim.corpora.MmCorpus.save_corpus(save_filename + ".mm", corpus, id2word=dictionary)
-        ldamodel.save(save_filename + ".model")
+            dictionary.save(save_filename + ".dict")
+            gensim.corpora.MmCorpus.save_corpus(save_filename + ".mm", corpus, id2word=dictionary)
+            ldamodel.save(save_filename + ".model")
 
         return ldamodel, corpus, dictionary
