@@ -7,5 +7,4 @@
 - gensim for LDA/LSA
 - IPython (IPyKernel, Jupyter)
 - scikit-learn
-- lda
 - pandas and redis for recommender

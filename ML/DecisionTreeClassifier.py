@@ -1,13 +1,14 @@
 import numpy as np
+from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 
 from ML.ClassifierData import ClassifierData
 
 
-class Classifier:
+class C45DecisionTreeClassifier:
     """
     Class that uses TF-IDF vector text representation and the SGD algorithm to classify texts.
     """
@@ -24,8 +25,7 @@ class Classifier:
         self.__clf_data = ClassifierData(data, target, target_names)
         text_clf = Pipeline([('vect', CountVectorizer()),
                              ('tfidf', TfidfTransformer()),
-                             ('clf', SGDClassifier(alpha=.0001, n_iter=100,
-                                                   penalty='l2')),
+                             ('clf', DecisionTreeClassifier(criterion='entropy')),
                             ])
 
         self.__text_clf = text_clf.fit(self.__clf_data.data, self.__clf_data.target)

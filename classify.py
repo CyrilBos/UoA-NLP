@@ -1,5 +1,5 @@
 from Database.DatabaseManager import DatabaseManager
-from ML.Classifier import Classifier
+from ML.SGDClassifier import SGDClassifier
 
 connect_string = "dbname=uoa-nlp user=admin"
 dbmg = DatabaseManager(connect_string)
@@ -20,7 +20,7 @@ for question_forum in questions_forum_db:
         data.append(content)
         target.append(target_names.index(question_forum['name']))
 
-forum_question_classifier = Classifier(data, target, target_names)
+forum_question_classifier = SGDClassifier(data, target, target_names)
 
 print('Precision of the classifier: ', forum_question_classifier.evaluate_precision())
 

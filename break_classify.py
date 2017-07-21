@@ -4,8 +4,9 @@ from nltk.tokenize import sent_tokenize
 
 from Database.DatabaseHelper import DatabaseHelper
 from Database.Configuration import connection_string
+from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
 
-from ML.Classifier import Classifier
+from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 from ML.Recommender import Recommender
 
@@ -16,7 +17,7 @@ data, target, target_names = dbmg.get_training_data('Business')
 
 ###################################
 
-forum_question_classifier = Classifier(data, target, target_names)
+forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names) #SGDClassifier(data, target, target_names)
 
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision())
 
@@ -32,7 +33,6 @@ for category_name in target_names:
 
 
 for question in questions:
-    question = question.replace('?"', '? "').replace('!"', '! "').replace('."', '. "')
     for sentence in sent_tokenize(question):
         predicted_category_i = forum_question_classifier.predict([sentence])[0]
         predicted_categories[forum_question_classifier.target_names[predicted_category_i]].append(sentence)
@@ -50,7 +50,7 @@ for category in predicted_categories:
 cluster_target_names = []
 category_i = 0
 
-question_recommender = Recommender()
+#question_recommender = Recommender()
 
 for category in predicted_categories:
     if len(predicted_categories[category]) > 0:
@@ -61,9 +61,9 @@ for category in predicted_categories:
         #Split the set of documents into clusters of ~3 documents
         n_clusters = int(len(cluster_data[category]) / 3)
 
-        clusterizer = KMeansClusterizer(cluster_data[category], cluster_target[category], [category], n_features=10)
+        clusterizer = KMeansClusterizer(cluster_data[category], cluster_target[category], [category])
 
-        km, X = clusterizer.idf_clusterize(n_clusters=n_clusters)
+        km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=100)
 
         #print the clusters and save them to a file
         clusters = [[] for dummy in range(n_clusters)]

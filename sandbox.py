@@ -1,9 +1,23 @@
 from Database.Configuration import connection_string
 from Database.DatabaseHelper import DatabaseHelper
 
+import numpy as np
+
 db = DatabaseHelper(connection_string)
 
-print(db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) and not in ((125279, 125317,125731,126669,127335,127449,127689,127890,130402,130542,132982,135388,135533,136533,137509,137538,138434,139243,139257,139870,) order by random() limit 200"))
+x = []
+x.append([3,4])
+x.append([3,4])
+x.append([3,4])
+X = np.array(x)
+print(X.shape)
+
+
+exit()
+f = open('questions.txt', 'w')
+for row in db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data where question_id not in (125279, 125317,125731,126669,127335,127449,127689,127890,130402,130542,132982,135388,135533,136533,137509,137538,138434,139243,139257,139870)) order by random() limit 160"):
+    print(row)
+    f.write(str(row[0]) + ", '" + row[1] + "', '" + row[2] + "'\n")
 exit()
 
 questions_sentences = []
