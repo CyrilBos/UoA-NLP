@@ -14,7 +14,6 @@ class DatabaseHelper(DatabaseManager):
         """
         super(DatabaseHelper, self).__init__(connect_str)
 
-
     def get_community_id(self, community_name):
         return self.select_query('select community_id from community where community_name = %s', (community_name,))[0]
 

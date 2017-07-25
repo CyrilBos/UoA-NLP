@@ -135,13 +135,34 @@ class KMeansClusterizer:
         print("n_samples: %d, n_features: %d" % X.shape)
 
         km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
-                    verbose=self.__verbose, n_jobs=1)
+                    verbose=self.__verbose, n_jobs=3)
 
         print("Clustering sparse data with %s" % km)
 
         km.fit(X)
 
         return km, X
+
+    def print_to_file(self, filename, cluster_category_data, n_clusters, km):
+        clusters = [[] for dummy in range(n_clusters)]
+
+        i = 0
+        for cluster_num in km.labels_:
+            clusters[cluster_num].append(cluster_category_data[i])
+            i += 1
+
+        n = 0
+
+        save_file = open(filename, 'w')
+
+        for cluster in clusters:
+            if len(cluster) > 1:
+                # print('CLUSTER {}'.format(n))
+                save_file.write('CLUSTER {}\n'.format(n))
+                for doc in cluster:
+                    # print(doc)
+                    save_file.write(doc + '\n')
+            n += 1
 
     def get_metrics(self, km, X):
         """
@@ -172,3 +193,4 @@ class KMeansClusterizer:
               % metrics.adjusted_rand_score(self.__labels, km.labels_))
         print("Silhouette Coefficient: %0.3f"
               % metrics.silhouette_score(X, km.labels_, sample_size=1000))
+

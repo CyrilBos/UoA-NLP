@@ -1,9 +1,11 @@
 import random
 
+import numpy as np
 from nltk.tokenize import sent_tokenize
 
 from Database.DatabaseHelper import DatabaseHelper
 from Database.Configuration import connection_string
+from ML.DBSCANClusterizer import DBSCANClusterizer
 from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
 
 from ML.SGDClassifier import SGDClassifier
@@ -62,35 +64,27 @@ for category in predicted_categories:
         n_clusters = int(len(cluster_data[category]) / 3)
 
         clusterizer = KMeansClusterizer(cluster_data[category], cluster_target[category], [category])
+        #clusterizer = DBSCANClusterizer(cluster_data[category])
+        km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
+        clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category], n_clusters, km)
+        #db = clusterizer.compute()
 
-        km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=100)
+        #core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+        #core_samples_mask[db.core_sample_indices_] = True
+        #labels = db.labels_
 
-        #print the clusters and save them to a file
-        clusters = [[] for dummy in range(n_clusters)]
-        i = 0
-        for cluster_num in km.labels_:
-            clusters[cluster_num].append(cluster_data[category][i])
-            i += 1
+        ## Number of clusters in labels, ignoring noise if present.
+        #n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
 
-        n = 0
+        #clusters = [cluster_data[category][labels == i] for i in range(n_clusters)]
 
-        save_file = open('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), 'w')
-
-        for cluster in clusters:
-            if len(cluster) > 1:
-                #print('CLUSTER {}'.format(n))
-                save_file.write('CLUSTER {}\n'.format(n))
-                for doc in cluster:
-                    #print(doc)
-                    save_file.write(doc + '\n')
-            n += 1
-
-        """#Too heavy to run
+        """#Seems too heavy to run
         #"Clustering" the documents using a recommender
         recommend_data = {'id':[], 'description':[]}
 
         for i in range(len(cluster_data[category])):
             recommend_data['id'].append(i)
+
             recommend_data['description'].append(cluster_data[category][i])
 
         question_recommender.train(recommend_data)
@@ -108,5 +102,3 @@ for category in predicted_categories:
 
         category_i += 1
         """
-
-#clusterizer.print_metrics(km, X)
