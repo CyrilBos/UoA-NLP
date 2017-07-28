@@ -10,13 +10,15 @@ class LatentDirichletAllocation:
     """
     Implementation of the LDA algorithm to extract topic from a given set of documents.
     """
-    def __init__(self, doc_set):
+
+    def __init__(self, doc_set, workers=1):
         """
         Initalizes the new LDA instance with the given set of documents.
         :param doc_set: set of documents
         :type doc_set: list
         """
         self.__doc_set = doc_set
+        self.__workers = workers
 
     def get_corpus_and_dictionary(self):
         """
@@ -56,7 +58,7 @@ class LatentDirichletAllocation:
 
         return corpus, dictionary
 
-    def compute(self, topics, passes, save_filename=None):
+    def compute(self, topics, passes):
         """
         Preprocess the set of documents into a BOW representation and then
         computes the LDA model and returns it along with the corpus and dictionary.
@@ -71,13 +73,23 @@ class LatentDirichletAllocation:
         """
 
         corpus, dictionary = self.get_corpus_and_dictionary()
-        # generate LDA model
-        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes, workers=3)
-        if save_filename:
-            save_filename += "_{}_{}".format(topics, passes)
-
-            dictionary.save(save_filename + ".dict")
-            gensim.corpora.MmCorpus.save_corpus(save_filename + ".mm", corpus, id2word=dictionary)
-            ldamodel.save(save_filename + ".model")
+        ldamodel = gensim.models.LdaMulticore(corpus, num_topics=topics, id2word=dictionary, passes=passes,
+                                              workers=self.__workers)
 
         return ldamodel, corpus, dictionary
+
+    def save_to_file(self, filename, model, corpus, dictionary):
+        """
+                Saves model, dictionary and corpus to files, appending .model, .dict and .mm to filename.
+                :param filename: number of wanted topics
+                :type filename: str
+                :param model: number of times the algorithm will be executed
+                :type model: gensim.models.ldamodel.LdaModel
+                :param corpus: filename to save the model to
+                :type corpus: gensim.corpora.MmCorpus
+                :param dictionary: filename to save the model to
+                :type dictionary: gensim.corpora.Dictionary
+                """
+        gensim.corpora.MmCorpus.save_corpus(filename + ".mm", corpus, id2word=dictionary)
+        dictionary.save(filename + ".dict")
+        model.save(filename + ".model")
