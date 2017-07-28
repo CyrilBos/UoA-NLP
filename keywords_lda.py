@@ -1,8 +1,6 @@
-from Database.DatabaseHelper import DatabaseHelper
 from Database.Configuration import connection_string
+from Database.DatabaseHelper import DatabaseHelper
 from NLP.KeywordExtractor import KeywordExtractor
-
-from Logger import logger
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 from NLP.LatentSemanticAnalysor import LatentSemanticAnalyser
 
@@ -28,8 +26,10 @@ def rankKeywords(docs):
     return sorted_words
 
 def LDA(docs, topics, passes, save_filename):
-    lda = LatentDirichletAllocation(docs)
-    return lda.compute(topics, passes, save_filename)
+    lda = LatentDirichletAllocation(docs, workers=3)
+    model, corpus, dictionary = lda.compute(topics, passes)
+    lda.save_to_file(save_filename, model, corpus, dictionary)
+    return model, corpus, dictionary
 
 def LSA(docs, topics, save_filename):
     lsi = LatentSemanticAnalyser(docs)
@@ -96,7 +96,9 @@ for reply_by_question in replies_by_question_db:
 
 
 #print(rankKeywords(questions_contents))
-model, crp, dic = LDA(questions_contents, 20, 10, 'lda-saves/lsa-questions')
+topics = 20
+passes = 10
+model, crp, dic = LDA(questions_contents, topics, passes, 'lda_questions_{}_{}'.format(topics, passes))
 
 for topic in model.show_topics():
     print(topic[0], topic[1])
