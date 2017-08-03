@@ -1,12 +1,9 @@
 import numpy as np
 
-import lda
 
-from gensim import matutils
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
-from sklearn.feature_extraction.text import HashingVectorizer, TfidfTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer

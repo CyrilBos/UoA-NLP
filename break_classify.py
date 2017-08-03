@@ -90,9 +90,9 @@ for category in predicted_categories:
         #Split the set of documents into clusters of ~3 documents
         n_clusters = int(len(cluster_data[category]) / 3)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
         #dbscan()
-        affinity(cluster_data[category], cluster_target[category], [category])
+        #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
         #"Clustering" the documents using a recommender
