@@ -62,9 +62,9 @@ def kmeans(data, target, target_names, n_clusters):
     clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters, km)
 
-def dbscan():
-    clusterizer = DBSCANClusterizer(cluster_data[category], jobs=3)
-    db = clusterizer.compute(eps=0.3, min_samples=10)
+def dbscan(data):
+    clusterizer = DBSCANClusterizer(data, jobs=3)
+    db = clusterizer.compute(eps=0.5, min_samples=20)
 
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
@@ -73,7 +73,7 @@ def dbscan():
     # Number of clusters in labels, ignoring noise if present.
     n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
     print('{} clusters'.format(n_clusters))
-    clusters = [cluster_data[category][labels == i] for i in range(n_clusters)]
+    clusters = [data[labels == i] for i in range(n_clusters)]
     for cluster in clusters:
         for item in cluster:
             print(item)
@@ -94,7 +94,7 @@ for category in predicted_categories:
         n_clusters = int(len(cluster_data[category]) / 3)
 
         #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        dbscan()
+        dbscan(cluster_data[category])
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
