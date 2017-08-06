@@ -5,15 +5,922 @@ import numpy as np
 
 db = DatabaseHelper(connection_string)
 
-
-#f = open('questions.txt', 'a')
-#for row in db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data where question_id not in (125279, 125317,125731,126669,127335,127449,127689,127890,130402,130542,132982,135388,135533,136533,137509,137538,138434,139243,139257,139870)) order by random() limit 160"):
+# f = open('questions.txt', 'a')
+# for row in db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = 0 and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data where question_id not in (125279, 125317,125731,126669,127335,127449,127689,127890,130402,130542,132982,135388,135533,136533,137509,137538,138434,139243,139257,139870)) order by random() limit 160"):
 #    print(row)
 #    f.write(str(row[0]) + ", '" + row[1] + "', '" + row[2] + "'\n")
-#exit()
+# exit()
 
 questions_sentences = []
 
+questions_sentences.append({
+    'question_id': 140029,
+    'sentences': (
+        ('URGENTI am absolutely appalled at the service provided by Xero.',
+         'context'),
+        ('I have been asking for a call, and nobody will call.',
+         'problem'),
+        ('Xero claims, they are happy to call you.',
+         'context'),
+        ('I disagree.',
+         'context'),
+        ('I have asked 3 times now, and you will not.',
+         'context'),
+        ('Please call 07740306490 and help my bookkeeper.',
+         'context'),
+        ('Thank you',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 125719,
+    'sentences': (
+        (
+        'Hello,  I need to set up a Dishonoured Payment account in my chart of accounts to record the fraudulent \"receive money\" transaction from our customer and the bank retrieval \"spend money\" transaction.',
+        'context'),
+        ('Can anyone please help with where I set this account up in my chart of accounts.',
+         'question'),
+        ('thanksKathryn',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 134108,
+    'sentences': (
+        ('When I import bills in Purchases it works fine but it doesn\'t update the cost in Inventory.',
+         'problem'),
+        ('Is this by design or is there a way to allow this.',
+         'question'),
+        ('Otherwise I have to manually maintain my inventory costs.',
+         'context'),
+        ('I have read what I can and searched the forum but can\'t find any info on this',
+         'context'),
+        ('Anyone know an answer?',
+         'question'),
+        ('Thanks, Richard',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 136387,
+    'sentences': (
+        ('Hi All,I use Box (www.box.com) extensively for cloud based storage.',
+         'context'),
+        (
+        'It would be great if there was an option to Export a PDF of any report to your Box account from the Export Button (Currently there are options for PDF, Excel and Google Docs only).',
+        'context'),
+        ('Now I have to export to PDF, Save to my desktop then drag into Box.',
+         'problem'),
+        (
+        'I know you can publish reports in Xero, but I generally only publish final documents, not reports I use for working papers etc.',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 129000,
+    'sentences': (
+        ('Hi all.',
+         'context'),
+        ('I\'m looking for something that will use my client list out of Xero.',
+         'context'),
+        ('I need it to do email merge...',
+         'context'),
+        ('Anyone recommend anything?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 137078,
+    'sentences': (
+        ('I\'m trying to find a definitive answer but had no luck.',
+         'context'),
+        ('My employer wants me to be able to pay employees direct from zero without accessing online banking.',
+         'context'),
+        ('It doesn\'t seem to be an option.',
+         'problem'),
+        ('Can anyone confirm?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 138758,
+    'sentences': (
+        ('If you are a user of Xero and Fergus, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        ('Intuitive job management software designed for tradesmen by tradesmen. ',
+         'context'),
+        ('Quotes, schedules, invoices, timesheets, GPS tracking and seamless integration, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 126491,
+    'sentences': (
+        ('Has anyone out in the Xero Community done a large scale change to their chart of accounts?',
+         'question'),
+        ('We are planning a large change, and just curious to see how others might have tackled it.',
+         'context'),
+        (
+        'I wanted to keep an original \"copy/backup\" of our data up to 12/31/2015 and then roll over a new copy/database for 2016 and make the changes there.',
+        'context'),
+        ('However, Xero doesn\'t work similarly to QB, where you can download a copy of the database and store.',
+         'context'),
+        (
+        'It was suggested to do a major upload of the new GL codes, however - that seems fraught with issues and potential overwriting, and less out of our control, if you are switching codes one by one.',
+        'problem'),
+        ('Thoughts?',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138412,
+    'sentences': (
+        ('If you are a user of Xero and Zenoti, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        (
+        'A cloud-based, all-in-one software solution used by spas, salons and medi-spas to manage and grow their business.',
+        'context'),
+        ('For more information, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138540,
+    'sentences': (
+        ('If you are a user of Xero and EMAC, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        (
+        'Intelligent real time job management and billing tool to keep track of jobs, quotes, monitor profit margins as well as add labour time and materials.',
+        'context'),
+        ('For more information, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138744,
+    'sentences': (
+        ('If you are a user of Xero and e360, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        (
+        'e360 is an integrated website platform for SME\'s including Content Management, Ecommerce, Email Marketing, CRM, Reports, API & Xero integration, check out .',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 127310,
+    'sentences': (
+        ('I have to post in journals for a client payroll but the site won\'t allow me.',
+         'problem'),
+        (
+        'The charter of accounts shows \'wages payable\' as locked and automatically updated through the software\'s pay run facility(which we are not using).',
+        'context'),
+        ('Is there any way to unlock this?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 133835,
+    'sentences': (
+        ('Xero currently isn\'t recording the expense part of salary sacrifice transactions correctly.',
+         'problem'),
+        ('At present the pre sacrifice amounts allocated to gross wages.',
+         'context'),
+        ('I would expect the sacrificed amount should be allocated to the appropriate expense.',
+         'context'),
+        (
+        'For example where there is a gross wage of $1200 and $200 sacrificed for superannuation the gross wage of $1200 goes to wages expense and none of the sacrifice to superannuation expense.',
+        'context'),
+        ('This means each month/quarter/year manual journals are needed to correct the allocation.',
+         'context'),
+        ('This becomes more important with other types of salary sacrifice, such as motor vehicles where GST applies.',
+         'context'),
+        (
+        'It would be good to add an expense account to pre tax deduction pay items that auto posts the debit to the appropriate expense and credit to the wages expense account.',
+        'context'),
+        (
+        'Alternatively if we have the option for the account in the payroll item to be more than just a liability account as is presently the case.',
+        'context'),
+        ('This would at least allow the credit entry to be allocated against wages.',
+         'context'),
+        ('This would then shows correct gross wages and allow the salary sacrifice expense to be managed separately.',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 135171,
+    'sentences': (
+        ('Hi guys!',
+         'context'),
+        (
+        'I have a New Zealand Invoice (I am in Australia) that I have just paid via Forex (so in AUD into a Forex bank account here in Australia).',
+        'context'),
+        ('How on earth do I enter that into Xero?',
+         'question'),
+        ('Any advice would be appreciated!',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 125631,
+    'sentences': (
+        ('We are a builder and have a large number of small invoices from wholesalers.',
+         'context'),
+        ('These we pay in two or more large payments.',
+         'context'),
+        (
+        'However they often do not match exactly to a certain number of invoices, can you part allocate a payment to an invoice, leaving a remaining balance to clear off with the next invoice.',
+        'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 138036,
+    'sentences': (
+        ('i cannot find any option to process an employee leaver and therefore produce a P45 document?',
+         'problem'),
+        ('any help much appreciated',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 136169,
+    'sentences': (
+        (
+        'I like to run my eye down the account transaction to make sure that ever transaction has an invoice attachment.',
+        'context'),
+        (
+        'The problem is if you create a bill and reconcile it, it doesn\'t register that there is an attachment unless you click on the invoice in the description.',
+        'problem'),
+        (
+        'Having to go through two or three windows to make sure every transaction has an attachment can take a lot of time.',
+        'context'),
+        (
+        'Is there a way for the account transaction page to register the bill that has been reconciled with that transaction has an attachment?',
+        'question'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 136875,
+    'sentences': (
+        (
+        'I have just used payroll for the first time, and on my first pay run, the PAYG YTD is double the amount it should be.',
+        'problem'),
+        ('It is the first pay so it should be the same as \'This Pay\' column.',
+         'context'),
+        ('What have I don\'t wrong, or how can i fix this.',
+         'question'),
+        ('Many thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 134325,
+    'sentences': (
+        ('We have off-site staff with debit cards.',
+         'context'),
+        ('We have set them up as Users with the  \"Invoice Only- Invoice=Purchases Only\" user role.',
+         'context'),
+        (
+        'They need to be able to access Spend Money in order to take pictures of their receipts and code to gl accounts for their debit card purchases.',
+        'context'),
+        ('The mobile app is not showing the + (plus) sign to access spend money.',
+         'problem'),
+        ('We obviously do not want to provide greater levels of access to the staff.',
+         'context'),
+        (
+        'Is anyone using the mobile app/Spend Money with off-site staff and what User role have you had to assign to accomplish this?',
+        'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 125724,
+    'sentences': (
+        ('Hi,our year end was 31st December 2016.',
+         'context'),
+        ('I have a conversion balance in opening stock from 31st December 2015.',
+         'context'),
+        ('No other adjustments to stock have been made for the year 2016 so it has a YTD value of 0.00.',
+         'context'),
+        ('We don\'t use the inventory within Xero as it doesn\'t suit our business needs.',
+         'context'),
+        ('I have a figure for closing stock and am not sure where to journal the figures from / to.',
+         'context'),
+        ('My logic would be to leave the opening stock figure as it is.',
+         'context'),
+        ('Then credit my direct costs and debit closing stock with our closing stock figure?',
+         'question'),
+        ('I\'m a bit confused with how to handle this in Xero.',
+         'context'),
+        ('Sage seemed more straightforward :/',
+         'context'),
+        ('Any advice would be appreciated.',
+         'outroduction'),
+        ('Many thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 140153,
+    'sentences': (
+        ('Hi, Got a serious issue this morning when trying to open old files uploaded in AP by receipt bank.',
+         'context'),
+        (
+        'I don\'t know what happened but since the big file rollout but I cannot open, view nor download most of old files uploaded by receipt-bank.',
+        'problem'),
+        ('Also tried in chrome and nothing.',
+         'context'),
+        ('Scary.',
+         'context'),
+        ('Please confirm you guys are working on this to fix it ASAP.',
+         'question'),
+        ('Thanks.',
+         'outroduction'),
+        ('Otherwise, I just love the new file feature !',
+         'context'),
+        ('keep up the good work',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 127017,
+    'sentences': (
+        ('I have searched the FAQs but can\'t find the instructions.',
+         'context'),
+        ('Can anyone please help?',
+         'question'),
+        ('Thanks.',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 128073,
+    'sentences': (
+        ('Can the batch payment report please list the payments in the order they are in the batch?',
+         'question'),
+        ('I sorted a batch by supplier, however the PDF has them listed in a seemingly random order.',
+         'problem'),
+        (
+        'I provide the original invoices with the payment batch for tick off and it is easier if they are sorted alphabetically.',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138438,
+    'sentences': (
+        ('If you are a user of Xero and Progressclaim.com, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        ('Progressclaim.com, submit construction progress claims online, from any device, in seconds.',
+         'context'),
+        (
+        'Xero invoices created instantly with professional and compliant claims documentation attachedFor more information, check out .',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 127996,
+    'sentences': (
+        ('How do I set up an account for Discounts received from suppliers and what type please.',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 126511,
+    'sentences': (
+        ('Has anybody had experience accounting for Groupon deal payments in Xero?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 126094,
+    'sentences': (
+        (
+        '\'Hi All,It would appear that when I run reports such as profit & loss that it calculates the sales etc when the invoice was dated and not when payment is received.',
+        'problem'),
+        ('Is it possible to change the settings so that the sale is added into the period when payment is received?',
+         'question'),
+        ('Any help would be appreciated.',
+         'outroduction'),
+        ('Cheers',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 126263,
+    'sentences': (
+        (
+        'Hiya, new to Xero and having a few issues, can anyone please advise me:I have bank fed and reconciled my accounts so that they balance.',
+        'context'),
+        (
+        'Do I now need to add in company receipts and invoices paid to bills, or am I just repeating the process that reconciling does??',
+        'question'),
+        ('if so what is the point in having \"Bills you need to pay\"',
+         'question'),
+        ('Thanks in advance',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 128987,
+    'sentences': (
+        (
+        'We love to hear how business owners are working with their accountant or bookkeeper beyond traditional compliance work.',
+        'context'),
+        ('Share stories of what you\'ve been doing with your advisors now you\'re collaborating together on Xero.',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 135470,
+    'sentences': (
+        (
+        'When trying to edit invoices and quotes, the \"reference number\" on the invoice/quote keeps coming up as the invoice number.',
+        'context'),
+        (
+        'e.g. Invoice No. - INV-0019Reference should be - \"customers name\"but it comes up as INV-0019I went onto the .docx file but it shows the <<invoiceNumber>> where the invoice number is and <<reference>> where reference is.',
+        'problem'),
+        ('Any ideas?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 134177,
+    'sentences': (
+        ('This Xero  shows the process of entering receipts.',
+         'context'),
+        (
+        ' It starts with the mobile app, and then moves to the browser and at 50 seconds says \"just like the mobile app fill in the expense\".',
+        'context'),
+        ('Except from what I can see, it\'s not just like the mobile app.',
+         'context'),
+        (
+        'In the mobile app the user can assign expenses just as I\'d expect any expense app to work, by assigning them to a category (\"meals\")  also to the account it was paid from, i.e. a company credit card or by the employee etc.',
+        'context'),
+        (
+        'In the browser I see no way to select the account the expense was paid from, and therefore no way for the approver to know how the transaction was even paid for.',
+        'problem'),
+        ('Or for that matter for Xero to know where to assign the transaction?',
+         'problem'),
+        ('What am I missing??',
+         'question'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 128850,
+    'sentences': (
+        (
+        'I can\'t find a way to nominate an Bank account as closed (so no new transactions) but keep it in the system until the end of financial year.',
+        'problem'),
+        ('Has anyone done this??',
+         'question'),
+        ('regards Ian',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 134767,
+    'sentences': (
+        ('I have a new situation.',
+         'context'),
+        (
+        'A contractor who I normally pay had an invoice owing to me (she pays a base rent when doesn\'t bring in any income).',
+        'context'),
+        (
+        'She had not paid by the time her next \"payment\" from me was made so I deducted the \"monies owing\" (invoice amount) from the bill amount I paid her.',
+        'context'),
+        (
+        'This means that I now have 2 items to deal with:1.  the original invoice she owed eg. $500 looks like its still owing2.  the payment I made to her looks like a part payment of a bill -ie I created the bill as usual for her consulting fees -then deducted what she owed me.',
+        'problem'),
+        ('So bill $2000 -I paid her $1500.',
+         'context'),
+        ('Any ideas on how to rectify?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 136639,
+    'sentences': (
+        (
+        'I am working with a client who originally set up their company file in September and added some transactions to the end of the year but did not really start using Xero until January 1, 2012.',
+        'context'),
+        ('If I change the conversion date to 12/31/11 what happens to the prior transactions?',
+         'question'),
+        ('Does Xero ignore them?',
+         'question'),
+        ('Do we need to void them?',
+         'question'),
+        ('Just trying to figure out the most efficient way to do this.',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138800,
+    'sentences': (
+        ('If you are a user of Xero and Receipt Bank, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        ('Receipt Bank converts those annoying bits of paper � receipts and invoices - into Xero data, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 135170,
+    'sentences': (
+        ('It would be great if we could copy an existing standard invoice to a new repeating template.',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138959,
+    'sentences': (
+        ('Does anyone know of an App that will allow me to raise invoices in a foreign language?',
+         'question'),
+        (
+        'We need to send out invoices in Japanese and would love to be able to do this without a separate task to duplicate the invoice details.',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 137358,
+    'sentences': (
+        (
+        'Hi there,I\'ve successfully been doing payroll for a couple of months, but in December I have a strange occurrence.',
+        'context'),
+        ('I set the payment up automatically in my bank account so it was paid over the holidays.',
+         'context'),
+        ('I then reconciled when it came through into Xero.',
+         'context'),
+        ('But now in my payroll report it shows a deficit for December with the value in brackets.',
+         'problem'),
+        ('Does anyone have any thoughts on why this might be?',
+         'question'),
+        ('I thought it might be a coding issue but that seems to be fine.',
+         'context'),
+        ('The bank account statements match correctly.',
+         'context'),
+        ('Any help would be greatly appreciated!',
+         'outroduction'),
+        ('ThanksAndy',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138085,
+    'sentences': (
+        (
+        'Hi teamCan you please advise whether we need to:> Do a monthly accrual journal for the employer kiwisaver contribution (say 3%) on top of the monthly holiday pay accrual journal',
+        'question'),
+        ('Many thanksBharat',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 128401,
+    'sentences': (
+        ('I\'m doing a work around for expense claims.',
+         'context'),
+        ('I want to import a bill that is on a csv file.',
+         'context'),
+        (
+        'It has several receipts, some of which have different tax rates and all of which will be in different accounts.',
+        'context'),
+        ('It\'s not clear how to do this when you import a bill using a csv file.',
+         'problem'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 125442,
+    'sentences': (
+        ('Hi all,I\'m in Canada, and my business is able to file GST using the \"quick method\".',
+         'context'),
+        (
+        'In short, this method is designed to reduce administrative work for small businesses and allows them to pay GST calculated using an approximation of tax owed, based on sales, rather than based on the actual amount collected/paid.',
+        'context'),
+        (
+        'So, for example, I have a sales tax account that says I owe the government $1,000 but the quick method means I only actually owe them $900.',
+        'context'),
+        ('How can I make an adjustment to my accounts to show that my sales tax owing has reduced by $100?',
+         'question'),
+        (
+        'I tried to do a manual journal, but that doesn\'t work as a manual journal must have equal credits and debits.',
+        'context'),
+        ('Thanks,-Peter',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 127243,
+    'sentences': (
+        ('We have a client who uses Farmlands pre the merger of the the 2 firms.',
+         'context'),
+        ('Can we set up in Xero Using the CRT Co-Op bank feeds form',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 133500,
+    'sentences': (
+        (
+        'When sending out payslips to clients, is it possible to add a second email address (CC\'d) that is copied in on each email, we have had a few instances where we have sent Payslips to our clients from Xero and they have confirmed none receipt?',
+        'question'),
+        (
+        'If we can\'t add the option of a cc\'d email address, is it possible to utilise a function that is available for invoices when completed - status is shown as sent and then viewed?',
+        'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 128766,
+    'sentences': (
+        ('Hi,We are a high volume store that processes over a hundred transactions per day.',
+         'context'),
+        (
+        'The amount that are paid via EFTPOS show up in the bank as a single transaction (one for each EFTPOS machine).',
+        'context'),
+        ('Obviously, banked cash shows up as a single deposit.',
+         'context'),
+        (
+        'The problem is, I want to be able to enter sales separated by department of the store, as our expenses are recorded.',
+        'problem'),
+        (
+        'The way we did this with Reckon was an EFT Clearing account, and an Undeposited Funds account, which we then entered a manual journal weekly that credited Sales accounts and debited these two clearing accounts.',
+        'context'),
+        ('When the money hit the bank, this was credited as coming from these clearing accounts.',
+         'context'),
+        (
+        'I was wondering if there was a better way of doing this in Xero, as it is a lot of manual data entry every week for every store!',
+        'question'),
+        ('Thanks for your input!',
+         'outroduction'),
+        ('Jonathon.',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 127873,
+    'sentences': (
+        (
+        'I know that this has likely been asked elsewhere, but I am curious to know whether or not sales invoices and purchase invoices can be partly auto-filled based on previous entries?',
+        'question'),
+        ('And, if this is possible, can this feature be switched on and off.',
+         'question'),
+        ('Thanks',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 125842,
+    'sentences': (
+        ('Why not have as a standard tax code \'Purchases for private use or not income tax deductible\'?',
+         'question'),
+        (
+        'This would allow \'entertainment expenses\' and \'motor vehicle private use\' for example to be set to this tax code thereby automatically populating G15.',
+        'context'),
+        ('Also note the word \'deductible\' is currently spelt incorrectly on Xero\'s GST Calc W\'sheet!',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138792,
+    'sentences': (
+        ('If you are a user of Xero and Tanda, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        ('Pay staff correctly for the time they work.',
+         'context'),
+        ('Manage rostering, time clock attendance & award interpretation with Xero payroll.',
+         'context'),
+        ('Get the most from your workforce.',
+         'context'),
+        ('For more information, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 128408,
+    'sentences': (
+        ('Hi allJust wondering how I would generate a report for sales that lists the marketing link we have put in?',
+         'question'),
+        ('Eg I want to see what Marketing Produced ho much sales.',
+         'context'),
+        ('I have already been entering the Marketing option in all invoices.',
+         'context'),
+        ('Thanks in advance for you help.',
+         'outroduction'),
+        ('Hope',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 126708,
+    'sentences': (
+        ('I\'m just getting started with Xero and have a few questions.',
+         'context'),
+        ('I converted my books from Quickbooks.',
+         'context'),
+        ('#1 - How is the statement balance calculated in Xero?',
+         'question'),
+        (
+        'My Xero balance is spot on with my bank account, but the statement balance is some number that has never been a statement ending balance or a daily balance in my checking account.',
+        'problem'),
+        ('I tried following the steps if the two balances don\'t match, but nothing has worked. ',
+         'context'),
+        ('I figure if I understand how it comes up with it I may be able to tweak some things.',
+         'context'),
+        ('#2 - Reconciliation seems to encompass much more than I\'m used to.',
+         'context'),
+        (
+        'To me a reconciliation is when you match all your entered transactions with an end of month statement to make sure you have entered everything correctly.',
+        'context'),
+        ('I don\'t see a way to do this in Xero.',
+         'problem'),
+        ('Xero seems to only reconcile transactions with daily downloads from the bank.',
+         'problem'),
+        ('Is there a way to reconcile with a bank statement as well?',
+         'question')
+    )
+})
+questions_sentences.append({
+    'question_id': 138786,
+    'sentences': (
+        ('If you are a user of Movemybooks, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        (
+        'Sage & Quickbooks to Xero data conversions - the quickest and easiest way to get your clients moved to Xero by UK software version specialists, check out .',
+        'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 133921,
+    'sentences': (
+        ('Employees listed by surname first not Christian name',
+         'problem')
+    )
+})
+questions_sentences.append({
+    'question_id': 136143,
+    'sentences': (
+        ('It would be useful if the customised dates chosen in Settings were picked up when generating statements.',
+         'context'),
+        ('At the moment the due date functionality is only active in generating invoices.',
+         'problem')
+    )
+})
+questions_sentences.append({
+    'question_id': 137635,
+    'sentences': (
+        ('I am looking for a fast and easy way to pay a 1099 contractor on a monthly basis.',
+         'question'),
+        (
+        'Our company partnered with an artist to create an app and I am looking for a simple way to pay the artist their share of app sales every month.',
+        'context'),
+        ('It would be really nice if it could be run with the payroll, since I already do that on a monthly basis.',
+         'context'),
+        ('Thank you',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138261,
+    'sentences': (
+        ('If you are a user of Xero and iKentoo, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        (
+        'iKentoo is an enterprise iPad based hospitality POS, which links seamlessly to Xero, and is trusted by over 3000 restaurants and bars worldwide.',
+        'context'),
+        ('For more information, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 138592,
+    'sentences': (
+        ('If you are a user of Xero and Hubdoc, tell us how you are getting on and your experience so far.',
+         'context'),
+        ('Any tips?',
+         'question'),
+        ('Paperwork on auto-pilot.',
+         'context'),
+        ('Receipts, bills and statements - all in one place - automatically synced to Xero.',
+         'context'),
+        ('For more information, check out .',
+         'context')
+    )
+})
+questions_sentences.append({
+    'question_id': 125276,
+    'sentences': (
+        ('Hi all,I would like to record all outbound payments within Xero.',
+         'context'),
+        ('I was hoping to record payments in Xero as and when we pay by bacs or card payment over the phone.',
+         'context'),
+        ('This works fine when we have been invoiced.',
+         'context'),
+        ('However, we are on proforma invoicing with some of our suppliers.',
+         'context'),
+        ('In these instances we tend to pay the proforma, await the invoice before processing into Xero.',
+         'context'),
+        ('We then spend too long allocating payments as there can be a time before the invoice ends up in Xero.',
+         'problem'),
+        (
+        'I envisaged some sort of merging proforma and invoice together but I don\'t really know what is the correct practice with managing these types of transactions.',
+        'context'),
+        ('Any help would be much appreciated.',
+         'outroduction'),
+        ('Thanks,Richard',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 125999,
+    'sentences': (
+        (
+        'Bought 100 Widgets at $10 each on credit card 1, created a bill for $1,000Upon inspection, 10 widgets were damaged, and returned to the supplier.',
+        'context'),
+        ('They issued a refund to a different credit card.',
+         'context'),
+        (
+        'Credit card 1 shows $1000 expense Credit card 2 shows -$100 (\'income\')I discovered a Bill couldn\'t be used for a negative value.',
+        'context'),
+        (
+        'I understand that a credit note can be created, but since the inventory has been reduced already I think applying the credit note might not work?',
+        'question'),
+        ('Wondering if an invoice for the 10 widgets with a credit note is the answer?',
+         'question'),
+        ('Or just an invoice?',
+         'question'),
+        ('Or something else entirely?',
+         'question'),
+        ('Thanks in advance for any ideas.',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 126919,
+    'sentences': (
+        ('Hello,Still getting to grips with Xero.',
+         'context'),
+        (
+        'I am doing my my first pay run and the PAYE, Employee NIC and Employer NIC have correctly deducted from the final amount in \'Step 2. Enter Employee Payments\' however, when clicking through to \'Step 3. Review\' they are  as \'Other payments\'.',
+        'problem'),
+        ('I have tried changing options but have had no success yet.',
+         'context'),
+        ('I have classed the 3 pay items above as paid to a contact I created called HMRC - is this correct?',
+         'question'),
+        ('Any help appreciated.',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138948,
+    'sentences': (
+        (
+        'My business fixes turf machinery like mowers ect. and we carry a lot of stock eg. bearings, belts ect. We need a simple barcoding system that we scan when it arrives and then scans when we\'ve used it and transfers the data to Xero.',
+        'context'),
+        ('We\'ve tried stuff like Dear and Unlimited and it just doesn\'t work.',
+         'problem'),
+        ('Open to suggestions.',
+         'outroduction')
+    )
+})
+questions_sentences.append({
+    'question_id': 138016,
+    'sentences': (
+        ('Where can you view the postings of the payroll journal?',
+         'question')
+    )
+})
+
+id = 0
+for question_sentences in questions_sentences:
+    for sentence in question_sentences['sentences']:
+        category_id = \
+        db.select_query('select training_data_category_id from training_data_category where category_name = %s',
+                        (sentence[1],))[0]
+        db.insert_query('insert into training_data(content, training_data_category_id, question_id) values(%s, %s, %s)',
+                        (sentence[0], category_id, question_sentences['question_id']))
+        id += 1
+
+"""
 
 questions_sentences.append({
 	'question_id':137349,
@@ -1578,15 +2485,8 @@ questions_sentences.append({
 	)
 })
 
-id = 0
-for question_sentences in questions_sentences:
-    for sentence in question_sentences['sentences']:
-        category_id = db.select_query('select training_data_category_id from training_data_category where category_name = %s', (sentence[1],))[0]
-        db.insert_query('insert into training_data(content, training_data_category_id, question_id) values(%s, %s, %s)', (sentence[0], category_id, question_sentences['question_id']))
-        id+=1
 
-
-
+"""
 """
 questions_sentences.append({
     'question_id': 125435,
@@ -2280,7 +3180,6 @@ questions_sentences.append({
     )
 })
 """
-
 
 """
 questions_sentences.append({
