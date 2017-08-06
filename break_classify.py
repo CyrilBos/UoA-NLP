@@ -6,7 +6,7 @@ from Database.Configuration import connection_string
 from ML.AffinityPropagationClusterizer import AffinityPropagationClusterizer
 from ML.DBSCANClusterizer import DBSCANClusterizer
 from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
-
+from ML.HierarchicalClusterizer import HierarchicalClusterizer
 from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
@@ -97,9 +97,9 @@ for category in predicted_categories:
         #Split the set of documents into clusters of ~3 documents
         n_clusters = int(len(cluster_data[category]) / 3)
 
-        kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
         #dbscan(cluster_data[category])
-        #hierarchical(cluster_data[category],n_clusters,'ward')
+        hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
