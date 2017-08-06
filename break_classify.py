@@ -10,6 +10,7 @@ from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
 from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
+preprocess = False
 
 dbmg = DatabaseHelper(connection_string)
 questions = dbmg.get_questions_content()
@@ -17,7 +18,7 @@ data, target, target_names = dbmg.get_training_data('Business')
 
 ###################################
 
-forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names) #SGDClassifier(data, target, target_names)
+forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess) #SGDClassifier(data, target, target_names)
 forum_question_classifier.train()
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision(1))
 
@@ -36,6 +37,7 @@ for category_name in target_names:
 
 
 for question in questions:
+    question = question.replace('.', '. ').replace('.  ', '. ').replace('?', '? ').replace('?  ', '? ').replace('!', '! ').replace('!  ', '! ')
     for sentence in sent_tokenize(question):
         predicted_category_i = forum_question_classifier.predict([sentence])[0]
         predicted_categories[forum_question_classifier.target_names[predicted_category_i]].append(sentence)
@@ -56,14 +58,15 @@ forum_question_classifier.evaluate_precision(10)
 
 #question_recommender = Recommender()
 
-def kmeans(data, target, target_names, n_clusters):
-    clusterizer = KMeansClusterizer(data, target, target_names, jobs=3)
+def kmeans(data, target, target_names):
+    n_clusters = int(len(data) / 3)
+    clusterizer = KMeansClusterizer(data, target, target_names, preprocess=preprocess, jobs=3)
     km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters, km)
 
 def dbscan(data):
-    clusterizer = DBSCANClusterizer(data, jobs=3)
+    clusterizer = DBSCANClusterizer(data, preprocess=preprocess, jobs=3)
     db = clusterizer.compute(eps=0.5, min_samples=20)
 
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
@@ -85,16 +88,15 @@ def affinity(data, target, target_names):
 
 
 for category in predicted_categories:
-    if len(predicted_categories[category]) > 0:
+    if len(predicted_categories[category]) > 0 and category != 'outroduction':
         #cluster_target_names.append(category)
-        for sentence in predicted_categories[category]:
-            cluster_data[category].append(sentence)
-            cluster_target[category].append(category)
+        #for sentence in predicted_categories[category]:
+            #cluster_data[category].append(sentence)
+            #cluster_target[category].append(category)
         #Split the set of documents into clusters of ~3 documents
-        n_clusters = int(len(cluster_data[category]) / 3)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        dbscan(cluster_data[category])
+        #kmeans(cluster_data[category], cluster_target[category], [category])
+        dbscan(predicted_categories[category])
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run

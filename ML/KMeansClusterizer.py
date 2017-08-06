@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
+from NLP.InputPreprocessor import InputPreprocessor
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 from ML.ClassifierData import ClassifierData
 
@@ -35,6 +36,7 @@ class KMeansClusterizer:
         :param verbose: set to True to print details on the KMeans clusterization
         :type verbose: bool
         """
+
         self.__dataset = ClassifierData(data, target, target_names)
         print("%d documents" % len(self.__dataset.data))
         print("%d categories" % len(self.__dataset.target_names))
@@ -45,7 +47,7 @@ class KMeansClusterizer:
         self.__jobs = jobs
         self.__verbose = verbose
 
-    def idf_clusterize(self, n_features=20, n_components=10, n_clusters=-1, max_iter=5):
+    def idf_clusterize(self, preprocess=False, n_features=20, n_components=10, n_clusters=-1, max_iter=5):
         """
         Computes the TF-IDF representation of the data then clusters them with the given parameters.
         :param n_clusters: Number of wanted clusters
@@ -62,8 +64,18 @@ class KMeansClusterizer:
         if n_clusters != -1:
             self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
+        if preprocess:
+            analyzer = TfidfVectorizer.build_analyzer()
+            ipp = InputPreprocessor(None)
+            def preprocess(doc):
+                return [ipp.normalise(word) for word in analyzer(doc)]
 
-        vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
+            vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
+                                         min_df=2, stop_words='english',
+                                         analyzer=preprocess)
+
+        else:
+            vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
                                      min_df=2, stop_words='english')
         X = vectorizer.fit_transform(self.__dataset.data)
 
