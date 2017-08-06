@@ -83,6 +83,10 @@ def affinity(data, target, target_names):
 
     clusterizer.compute(n_features=10, max_iter=1)
 
+def hierarchical(data, n_clusters, linkage):
+    clusterizer = HierarchicalClusterizer(data, n_clusters, linkage)
+    db = clusterizer.compute(n_features=10)
+
 
 for category in predicted_categories:
     if len(predicted_categories[category]) > 0:
@@ -93,8 +97,9 @@ for category in predicted_categories:
         #Split the set of documents into clusters of ~3 documents
         n_clusters = int(len(cluster_data[category]) / 3)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        dbscan(cluster_data[category])
+        kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        #dbscan(cluster_data[category])
+        #hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
