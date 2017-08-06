@@ -11,4 +11,4 @@ class DBSCANClusterizer:
         self.__jobs = jobs
 
     def compute(self, eps=0.3, min_samples=10):
-        return DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self.__jobs, algorithm='ball_tree').fit(self.__data)
+        return DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self.__jobs, algorithm='ball_tree').fit(self.__data.toarray())

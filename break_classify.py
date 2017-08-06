@@ -73,10 +73,12 @@ def dbscan(data):
     # Number of clusters in labels, ignoring noise if present.
     n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
     print('{} clusters'.format(n_clusters))
-    clusters = [data[labels == i] for i in range(n_clusters)]
+    clusters = [data[labels[i]] for i in range(n_clusters)] 
+    #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
     for cluster in clusters:
-        for item in cluster:
-            print(item)
+        print(cluster)    
+    #for item in cluster:
+         #   print(item)
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
