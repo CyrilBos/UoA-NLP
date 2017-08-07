@@ -8,7 +8,7 @@ from ML.ClassifierData import ClassifierData
 
 class HierarchicalClusterizer:
     def __init__(self, data, n_clusters, linkage = 'ward'):
-        self.__n_clusters = n_clusters;
+        self.__n_clusters = n_clusters
         self.__data = data
         self.__linkage = linkage
 
@@ -23,4 +23,4 @@ class HierarchicalClusterizer:
 
         label = ac.labels_
 
-        return ac;
+        return ac

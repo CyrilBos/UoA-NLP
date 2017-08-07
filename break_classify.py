@@ -85,7 +85,9 @@ def affinity(data, target, target_names):
 
 def hierarchical(data, n_clusters, linkage):
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage)
-    db = clusterizer.compute(n_features=10)
+    clusters = clusterizer.compute(n_features=10)
+    for row in clusters:
+        print(row)
 
 
 for category in predicted_categories:
