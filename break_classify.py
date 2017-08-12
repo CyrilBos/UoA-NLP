@@ -87,7 +87,15 @@ def affinity(data, target, target_names):
 
 def hierarchical(data, n_clusters, linkage):
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage)
-    db = clusterizer.compute(n_features=10)
+    hl = clusterizer.compute(n_features=10)
+    labels = hl.labels_
+    print("Nuber of data points: ", labels.size)
+    print("Number of clusters: ", np.unique(labels).size)
+    
+    clusterizer.printClusters()
+    #clusters = [data[labels == i] for i in range(n_clusters)]
+    #for row in clusters:
+    #    print(row)
 
 
 for category in predicted_categories:
@@ -97,7 +105,7 @@ for category in predicted_categories:
             cluster_data[category].append(sentence)
             cluster_target[category].append(category)
         #Split the set of documents into clusters of ~3 documents
-        n_clusters = int(len(cluster_data[category]) / 3)
+        n_clusters = int(len(cluster_data[category]) / 15)  #this is 15 for larger clusters, temporary
 
         #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
         #dbscan(cluster_data[category])
