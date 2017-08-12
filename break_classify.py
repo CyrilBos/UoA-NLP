@@ -76,14 +76,6 @@ def dbscan(data):
     clusterizer.printClusters()
 
     # Number of clusters in labels, ignoring noise if present.
-<<<<<<< Updated upstream
-    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-    print('{} clusters'.format(n_clusters))
-    clusters = [data[labels == i] for i in range(n_clusters)]
-    for cluster in clusters:
-        for item in cluster:
-            print(item)
-=======
     #n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
     #print('{} clusters'.format(n_clusters))
     #clusters = [data[labels[i]] for i in range(n_clusters)] 
@@ -92,7 +84,6 @@ def dbscan(data):
     #    print(cluster)    
     #for item in cluster:
          #   print(item)
->>>>>>> Stashed changes
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
@@ -122,8 +113,8 @@ for category in predicted_categories:
         n_clusters = int(len(cluster_data[category]) / 15)  #this is 15 for larger clusters, temporary
 
         #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        #dbscan(cluster_data[category])
-        hierarchical(cluster_data[category],n_clusters,'ward')
+        dbscan(cluster_data[category])
+        #hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run

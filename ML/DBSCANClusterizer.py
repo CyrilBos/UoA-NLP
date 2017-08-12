@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 class DBSCANClusterizer:
     def __init__(self, data, n_features=10, jobs=1):
         self.__data = data
-        self.__features = features
+        self.__features = n_features
         self.__jobs = jobs
 
     def compute(self, eps=0.3, min_samples=10):       
@@ -17,7 +17,7 @@ class DBSCANClusterizer:
 
         self.__db = DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self.__jobs, algorithm='ball_tree').fit(X)
     	
-    	return self.__db
+        return self.__db
 
     def printClusters(self, min_len = 2):
         labels = (self.__db).labels_
