@@ -68,17 +68,21 @@ def dbscan(data):
 
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
+    
     labels = db.labels_
+    print("Nuber of data points: ", labels.size)
+    print("Number of clusters: ", np.unique(labels).size)
+    
+    clusterizer.printClusters()
 
     # Number of clusters in labels, ignoring noise if present.
-    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-    print('{} clusters'.format(n_clusters))
-    clusters = [data[labels[i]] for i in range(n_clusters)] 
+
+    #n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+    #print('{} clusters'.format(n_clusters))
+    #clusters = [data[labels[i]] for i in range(n_clusters)] 
     #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
-    for cluster in clusters:
-        print(cluster)    
-    #for item in cluster:
-         #   print(item)
+    #for cluster in clusters:
+    #    print(cluster)    
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
@@ -108,8 +112,8 @@ for category in predicted_categories:
         n_clusters = int(len(cluster_data[category]) / 15)  #this is 15 for larger clusters, temporary
 
         #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        #dbscan(cluster_data[category])
-        hierarchical(cluster_data[category],n_clusters,'ward')
+        dbscan(cluster_data[category])
+        #hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
