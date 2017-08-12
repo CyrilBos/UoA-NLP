@@ -68,15 +68,31 @@ def dbscan(data):
 
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
+    
     labels = db.labels_
+    print("Nuber of data points: ", labels.size)
+    print("Number of clusters: ", np.unique(labels).size)
+    
+    clusterizer.printClusters()
 
     # Number of clusters in labels, ignoring noise if present.
+<<<<<<< Updated upstream
     n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
     print('{} clusters'.format(n_clusters))
     clusters = [data[labels == i] for i in range(n_clusters)]
     for cluster in clusters:
         for item in cluster:
             print(item)
+=======
+    #n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+    #print('{} clusters'.format(n_clusters))
+    #clusters = [data[labels[i]] for i in range(n_clusters)] 
+    #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
+    #for cluster in clusters:
+    #    print(cluster)    
+    #for item in cluster:
+         #   print(item)
+>>>>>>> Stashed changes
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
