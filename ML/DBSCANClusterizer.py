@@ -13,8 +13,6 @@ class DBSCANClusterizer:
                                      min_df=2, stop_words='english',
                                      use_idf=True)
 
-    def compute(self, eps=0.3, min_samples=10):
-
         X = (tf_idf_vectorizer.fit_transform(self.__data)).toarray()
 
         self.__db = DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self.__jobs, algorithm='ball_tree').fit(X)
