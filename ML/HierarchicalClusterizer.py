@@ -1,5 +1,5 @@
 import numpy as np
-
+import csv
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import Normalizer

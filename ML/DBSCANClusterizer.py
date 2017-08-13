@@ -1,6 +1,6 @@
 from sklearn.cluster import DBSCAN
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+import csv
 
 class DBSCANClusterizer:
     def __init__(self, data, n_features=10, jobs=1):
