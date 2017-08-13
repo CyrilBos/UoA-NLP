@@ -11,6 +11,9 @@ from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
 preprocess = False
+n_features = 20
+jobs = 3
+verbose = True
 
 dbmg = DatabaseHelper(connection_string)
 questions = dbmg.get_questions_content()
@@ -48,8 +51,6 @@ for category in predicted_categories:
     for i in range(nb):
         print(predicted_categories[category][i])
 
-forum_question_classifier.evaluate_precision(10)
-
 
 ##########################################################################################################
 
@@ -60,32 +61,20 @@ forum_question_classifier.evaluate_precision(10)
 
 def kmeans(data, target, target_names):
     n_clusters = int(len(data) / 3)
-    clusterizer = KMeansClusterizer(data, target, target_names, preprocess=preprocess, jobs=3)
-    km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
+    clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
+    clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
-                              n_clusters, km)
+                              n_clusters)
 
 def dbscan(data):
-    clusterizer = DBSCANClusterizer(data, preprocess=preprocess, jobs=3)
-    db = clusterizer.compute(eps=0.5, min_samples=20)
+    clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
+    clusterizer.compute(eps=0.5, min_samples=20)
 
-    core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-    core_samples_mask[db.core_sample_indices_] = True
-    labels = db.labels_
+    clusterizer.print_clusters()
 
-    # Number of clusters in labels, ignoring noise if present.
-    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-    print('{} clusters'.format(n_clusters))
-    clusters = [data[labels[i]] for i in range(n_clusters)] 
-    #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
-    for cluster in clusters:
-        print(cluster)    
-    #for item in cluster:
-         #   print(item)
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
-
     clusterizer.compute(n_features=10, max_iter=1)
 
 
@@ -95,7 +84,6 @@ for category in predicted_categories:
         #for sentence in predicted_categories[category]:
             #cluster_data[category].append(sentence)
             #cluster_target[category].append(category)
-        #Split the set of documents into clusters of ~3 documents
 
         #kmeans(cluster_data[category], cluster_target[category], [category])
         dbscan(predicted_categories[category])
