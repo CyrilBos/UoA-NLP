@@ -73,7 +73,8 @@ def dbscan(data):
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
     
-    clusterizer.printClusters()
+    clusterizer.print_clusters()
+    clusterizer.print_to_file()
 
     # Number of clusters in labels, ignoring noise if present.
 
@@ -96,7 +97,8 @@ def hierarchical(data, n_clusters, linkage):
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
     
-    clusterizer.printClusters()
+    clusterizer.print_clusters()
+    clusterizer.print_to_file()
     #clusters = [data[labels == i] for i in range(n_clusters)]
     #for row in clusters:
     #    print(row)

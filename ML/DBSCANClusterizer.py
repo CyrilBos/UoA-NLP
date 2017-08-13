@@ -19,7 +19,7 @@ class DBSCANClusterizer:
     	
         return self.__db
 
-    def printClusters(self, min_len = 2):
+    def print_clusters(self, min_len = 2):
         labels = (self.__db).labels_
        
         clusters = {}
@@ -39,3 +39,21 @@ class DBSCANClusterizer:
                     print("   ", clusters[item][i])
                     if (i > 10):
                         break;
+
+
+    def print_to_file(self):
+        labels = (self.__db).labels_
+       
+        clusters = {}
+        n = 0
+        for item in labels:     # put clusters in a dict
+            if item in clusters:
+                clusters[item].append(self.__data[n])
+            else:
+                clusters[item] = [self.__data[n]]
+            n += 1
+
+        with open('DBSCAN_Clusters.csv', 'w') as f: 
+            w = csv.DictWriter(f, clusters.keys())
+            w.writeheader()
+            w.writerow(clusters)
