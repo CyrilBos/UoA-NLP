@@ -6,7 +6,7 @@ from Database.Configuration import connection_string
 from ML.AffinityPropagationClusterizer import AffinityPropagationClusterizer
 from ML.DBSCANClusterizer import DBSCANClusterizer
 from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
-
+from ML.HierarchicalClusterizer import HierarchicalClusterizer
 from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
@@ -52,6 +52,7 @@ for category in predicted_categories:
         print(predicted_categories[category][i])
 
 
+
 ##########################################################################################################
 
 
@@ -70,12 +71,37 @@ def dbscan(data):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     clusterizer.compute(eps=0.5, min_samples=20)
 
-    clusterizer.print_clusters()
+    core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+    core_samples_mask[db.core_sample_indices_] = True
+    labels = db.labels_
 
+    # Number of clusters in labels, ignoring noise if present.
+    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+    print('{} clusters'.format(n_clusters))
+    clusters = [data[labels[i]] for i in range(n_clusters)] 
+    #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
+    for cluster in clusters:
+        print(cluster)    
+    #for item in cluster:
+         #   print(item)
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
+
     clusterizer.compute(n_features=10, max_iter=1)
+
+def hierarchical(data, n_clusters, linkage):
+    clusterizer = HierarchicalClusterizer(data, n_clusters, linkage)
+    hl = clusterizer.compute(n_features=10)
+    labels = hl.labels_
+    print("Nuber of data points: ", labels.size)
+    print("Number of clusters: ", np.unique(labels).size)
+
+    clusterizer.print_clusters()
+    clusterizer.print_to_file()
+    #clusters = [data[labels == i] for i in range(n_clusters)]
+    #for row in clusters:
+    #    print(row)
 
 
 for category in predicted_categories:
@@ -85,8 +111,9 @@ for category in predicted_categories:
             #cluster_data[category].append(sentence)
             #cluster_target[category].append(category)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category])
-        dbscan(predicted_categories[category])
+        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        dbscan(cluster_data[category])
+        #hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])
 
         """#Seems too heavy to run
