@@ -8,6 +8,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
 from ML.Clusterizer import Clusterizer
+from ML.SilhouetteValidator import SilhouetteValidator
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 
 
@@ -123,6 +124,8 @@ class KMeansClusterizer(Clusterizer):
 
         self.__processed_data = km.fit(X)
 
+        self.__X = X
+
         return km, self.__processed_data
 
     def print_to_file(self, filename, cluster_category_data, n_clusters):
@@ -173,3 +176,7 @@ class KMeansClusterizer(Clusterizer):
               % metrics.adjusted_rand_score(self.__labels, km.labels_))
         print("Silhouette Coefficient: %0.3f"
               % metrics.silhouette_score(X, km.labels_, sample_size=1000))
+
+    def silhouette_validate(self):
+        validator = SilhouetteValidate()
+        validator.compute(self.__X, self.__true_k, self.__labels)

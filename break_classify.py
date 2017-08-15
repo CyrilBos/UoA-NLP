@@ -66,6 +66,7 @@ def kmeans(data, target, target_names):
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters)
+    clusterizer.silhouette_validate()
 
 def dbscan(data):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
