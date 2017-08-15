@@ -1,5 +1,5 @@
 import numpy as np
-
+import csv
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import Normalizer
@@ -24,7 +24,7 @@ class HierarchicalClusterizer:
         
         return self.__ac
 
-    def printClusters(self, min_len = 2):
+    def print_clusters(self, min_len = 2):
         labels = (self.__ac).labels_
        
         clusters = {}
@@ -55,3 +55,20 @@ class HierarchicalClusterizer:
         #for i in range(self.__n_clusters):
         #   print("Cluster %d:" % i, end='')
         #   print(' %s ' % terms[0])
+
+    def print_to_file(self):
+        labels = (self.__db).labels_
+       
+        clusters = {}
+        n = 0
+        for item in labels:     # put clusters in a dict
+            if item in clusters:
+                clusters[item].append(self.__data[n])
+            else:
+                clusters[item] = [self.__data[n]]
+            n += 1
+
+        with open('Hierarchical_Clusters.csv', 'w') as f: 
+            w = csv.DictWriter(f, clusters.keys())
+            w.writeheader()
+            w.writerow(clusters)

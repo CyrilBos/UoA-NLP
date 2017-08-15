@@ -10,6 +10,10 @@ from ML.HierarchicalClusterizer import HierarchicalClusterizer
 from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
+preprocess = False
+n_features = 20
+jobs = 3
+verbose = True
 
 dbmg = DatabaseHelper(connection_string)
 questions = dbmg.get_questions_content()
@@ -17,7 +21,7 @@ data, target, target_names = dbmg.get_training_data('Business')
 
 ###################################
 
-forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names) #SGDClassifier(data, target, target_names)
+forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess) #SGDClassifier(data, target, target_names)
 forum_question_classifier.train()
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision(1))
 
@@ -36,6 +40,7 @@ for category_name in target_names:
 
 
 for question in questions:
+    question = question.replace('.', '. ').replace('.  ', '. ').replace('?', '? ').replace('?  ', '? ').replace('!', '! ').replace('!  ', '! ')
     for sentence in sent_tokenize(question):
         predicted_category_i = forum_question_classifier.predict([sentence])[0]
         predicted_categories[forum_question_classifier.target_names[predicted_category_i]].append(sentence)
@@ -46,7 +51,6 @@ for category in predicted_categories:
     for i in range(nb):
         print(predicted_categories[category][i])
 
-forum_question_classifier.evaluate_precision(10)
 
 
 ##########################################################################################################
@@ -56,32 +60,29 @@ forum_question_classifier.evaluate_precision(10)
 
 #question_recommender = Recommender()
 
-def kmeans(data, target, target_names, n_clusters):
-    clusterizer = KMeansClusterizer(data, target, target_names, jobs=3)
-    km, X = clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
+def kmeans(data, target, target_names):
+    n_clusters = int(len(data) / 3)
+    clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
+    clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
-                              n_clusters, km)
+                              n_clusters)
+    clusterizer.silhouette_validate()
 
 def dbscan(data):
-    clusterizer = DBSCANClusterizer(data, jobs=3)
-    db = clusterizer.compute(eps=0.5, min_samples=20)
+    clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
+    clusterizer.compute(eps=0.5, min_samples=20)
 
     core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
     core_samples_mask[db.core_sample_indices_] = True
-    
     labels = db.labels_
-    print("Nuber of data points: ", labels.size)
-    print("Number of clusters: ", np.unique(labels).size)
-    
-    clusterizer.printClusters()
 
     # Number of clusters in labels, ignoring noise if present.
-    #n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-    #print('{} clusters'.format(n_clusters))
-    #clusters = [data[labels[i]] for i in range(n_clusters)] 
+    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+    print('{} clusters'.format(n_clusters))
+    clusters = [data[labels[i]] for i in range(n_clusters)] 
     #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
-    #for cluster in clusters:
-    #    print(cluster)    
+    for cluster in clusters:
+        print(cluster)    
     #for item in cluster:
          #   print(item)
 
@@ -96,23 +97,22 @@ def hierarchical(data, n_clusters, linkage):
     labels = hl.labels_
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
-    
-    clusterizer.printClusters()
+
+    clusterizer.print_clusters()
+    clusterizer.print_to_file()
     #clusters = [data[labels == i] for i in range(n_clusters)]
     #for row in clusters:
     #    print(row)
 
 
 for category in predicted_categories:
-    if len(predicted_categories[category]) > 0:
+    if len(predicted_categories[category]) > 0 and category != 'outroduction':
         #cluster_target_names.append(category)
-        for sentence in predicted_categories[category]:
-            cluster_data[category].append(sentence)
-            cluster_target[category].append(category)
-        #Split the set of documents into clusters of ~3 documents
-        n_clusters = int(len(cluster_data[category]) / 15)  #this is 15 for larger clusters, temporary
+        #for sentence in predicted_categories[category]:
+            #cluster_data[category].append(sentence)
+            #cluster_target[category].append(category)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        #kmeans(cluster_data[category], cluster_target[category], [category])
         dbscan(cluster_data[category])
         #hierarchical(cluster_data[category],n_clusters,'ward')
         #affinity(cluster_data[category], cluster_target[category], [category])

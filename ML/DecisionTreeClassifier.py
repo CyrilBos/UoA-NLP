@@ -3,6 +3,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
+
+from NLP.InputPreprocessor import InputPreprocessor
 from Utils.Logger import logger
 
 from ML.ClassifierData import ClassifierData
@@ -12,7 +14,7 @@ class C45DecisionTreeClassifier:
     """
     Class that uses TF-IDF vector text representation and the SGD algorithm to classify texts.
     """
-    def __init__(self, data, target, target_names):
+    def __init__(self, data, target, target_names, preprocess=False):
         """
         Initializes the classifier by training it on the given data.
         :param data: text documents to train the classifier on
@@ -22,12 +24,22 @@ class C45DecisionTreeClassifier:
         :param target_names: category names
         :type target_names: list
         """
-        self.__clf_data = ClassifierData(data, target, target_names)
-        self.__text_clf = Pipeline([('vect', CountVectorizer()),
-                             ('tfidf', TfidfTransformer()),
-                             ('clf', DecisionTreeClassifier(criterion='entropy')),
-                            ])
 
+        self.__clf_data = ClassifierData(data, target, target_names)
+        if preprocess:
+            analyzer = CountVectorizer.build_analyzer()
+            ipp = InputPreprocessor(None)
+            def preprocess(doc):
+                return [ipp.normalise(word) for word in analyzer(doc)]
+
+            vectorizer = CountVectorizer(analyzer=preprocess)
+
+        else:
+            vectorizer = CountVectorizer()
+        self.__text_clf = Pipeline([('vect', vectorizer),
+                                    ('tfidf', TfidfTransformer()),
+                                    ('clf', DecisionTreeClassifier(criterion='entropy')),
+                                    ])
 
 
     @property
