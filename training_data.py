@@ -25,11 +25,351 @@ def update_db(questions_sentences):
 def get_new_training_data(number, community='Business', save_filename=None):
     if save_filename:
         f = open(save_filename, 'w')
-    for row in db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = {} and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit {}".format(db.get_community_id(community),number)):
+    for row in db.select_query("select question_id, text, content from question where forum_details_id in (select forum_details_id from forum_details where community_id = {} and name != 'Feature Requests') and question_id not in (select distinct question_id from training_data) order by random() limit {}".format(db.get_community_id(community)[0],number)):
         print(row)
-        f.write(str(row[0]) + ", '" + row[1] + "', '" + row[2] + "'\n")
+        if save_filename:
+            f.write(str(row[0]) + ", '" + row[1] + "', '" + row[2] + "'\n")
 
 questions_sentences = []
+
+questions_sentences.append({
+    'question_id': 125279,
+    'sentences': (
+        ('hi just wondering if anyone knows how to deal with eftpos cash outs in xero',
+         'context'),
+        ('so we  have a small cafe some times we do eftpos cash outs for our customers which is paid back to us the same day when we do our eftpos settlement ,when the eftpos settlement show up in xero from our bank feed it includes all eftpos transactions for that day and the cash out eg 500 income plus 20 cash out total 520 i code the 500 to income and have been coding the cash out to income non gst (eftpos cash out )',
+         'context'),
+        ('but im not sure how to show that it has been paid to the customer as it comes from the till when we do the cash banking for that day the bankings are down 20 because of the cash out eg banking should be 300 but is less 20 from cash out given so when the bank feed comes through for the banking it shows as 280 should i just note on that day that there was a 20 cash out given it does balance mabe im over thinking it a bit...',
+         'problem'),
+        ('might be easier to keep a manual diary of cash paid / cash out',
+         'problem'),
+        ('any ideas',
+         'outroduction')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 125317,
+    'sentences': (
+        ('Hello, Sorry if this is already somewhere. ',
+         'context'),
+        ('I need help recording payment fees deducted from income. ',
+         'context'),
+        ('I have sales invoices with -Services-Product SalesCash and Card payments received are then applied to the sales invoice. ',
+         'context'),
+        ('However, 20% of card transactions are deducted before it is sent to us for a cash advance, so these fees somehow need to be recorded as Loan Repayments. ',
+         'problem'),
+        ('Also, Stripe payments are also applied to the invoice as payment recieved but a fee is deducted before we receive it, ideally these need to be recorded as Merchant Fees. ',
+         'problem'),
+        ('Is there a simple way of doing this? ',
+         'question'),
+        ('I am going round in circles and not really getting anywhere.',
+         'context'),
+        ('Many thanks,',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 125731,
+    'sentences': (
+        ('Hi,For one of my bank accounts, the live feed is operating and I have checked that the transactions are pulling through as per my bank statement, however the account balance differs from the bank statement. ',
+         'problem'),
+        ('Refreshing the feed does not seem to help either. ',
+         'context'),
+        ('Please can anyone provide help on how to fix this? ',
+         'question'),
+        ('Thanks. ',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 126669,
+    'sentences': (
+        ("Hi, I'm a newbie so forgive me if this is something really obvious that I'm missing but after a whole day of searching help, I don't seem to be able to find the answer.",
+         'context'),
+        ('I have a balance that is incorrect, even after going through and checking all of the transactions, so I wanting to check the running balance to see where it was going wrong - I went to reports to do this. ',
+         'problem'),
+        ('I selected the transaction details for the first month of my accounts and the start balance was correct but the end of month balance was wrong. ',
+         'context'),
+        ('I then realised that all my spending is under the top heading of credit and all my income is under debit. ',
+         'context'),
+        ('When I total the columns as they should be and add and subtract these from my opening balance I get the same balance as my bank statement, but on Xero it\'s not working.',
+         'problem'),
+        ('Can anyone help? ',
+         'question'),
+        ('Thanks',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 127335,
+    'sentences': (
+        ("If a supplier is not registered for GST (has ABN, doesn't charge GST) - what tax code should be used when entering their invoice? ",
+         'question'),
+        ('Should I set up a different tax code at 0% - I want to make sure the expenses still end up on the BAS. ',
+         'question'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 127335,
+    'sentences': (
+        ("If a supplier is not registered for GST (has ABN, doesn't charge GST) - what tax code should be used when entering their invoice? ",
+         'question'),
+        ('Should I set up a different tax code at 0% - I want to make sure the expenses still end up on the BAS. ',
+         'question'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 127449,
+    'sentences': (
+        ( "Hello everyone, I'm having a problem calculating sales taxes for meals and entertainment in Canada. ",
+         'context'),
+        ('Sales tax is only claimable on 50% of the sales tax paid for GST/PST purposes in Canada. ',
+         'context'),
+        ('So, giving a very basic example, if a meal costs 100$ and GST was 5% (ie. 5$), then only 2.50$ can be claimed for GST purposes and the other 2.50$ gets added back to the meals & entertainment expense. ',
+         'context'),
+        ('Now, in Xero I created a separate sales tax component for meals & entertainment whereby the sales tax rate used for meals and entertainment expenses is half of the GST/PST rate, but this is where I run into problems. ',
+         'context'),
+        ('In Quebec, GST is 5% and QST is 9.975%. ',
+         'context'),
+        ('If I have a meal that\'s:Before tax: 5.50$GST @ 5%: 0.28$QST @ 9.975% : 0.55$Total after tax: 6.33$',
+         'context'),
+        ('The problem is, when I create a sales tax component for GST @ 2.5% and QST @ 4.9875% (which is half of the actual rates), the sales taxes being calculated are not half, since the pre-tax amount that Xero calculated is incorrect. ',
+         'problem'),
+        ('Xero gives me this:Before tax: 5.89$GST @ 2.5%: 0.15$ (in actuality it should be 0.14$)QST @ 4.9875%: 0.29$ (in actuality it should be (0.27$)Total after tax: 6.33$. ',
+         'problem'),
+        ("As you can see, when Xero backs out the taxes, the pre-tax rates are different and I'm not able to accurately calculate the sales tax for meals & entertainment expenses, which are supposed to be only claimed at 50%. ",
+         'problem'),
+        ('Does anyone have a solution? ',
+         'question'),
+        ("If I'm not being clear please let me know. Thanks. ",
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 127890,
+    'sentences': (
+        ("I've been using the Xero Touch (iOS) to send invoices to customers. ",
+         'context'),
+        ("When I log into Xero and look at my invoices, the history clearly states that they have been sent, however in the summary screen they are listed as 'invoice not sent' and thus no reminders have been sent. ",
+         'problem'),
+        ('This is quite frustrating, and is clearly a bug between the iOS app and the webapp. ',
+         'problem'),
+        ('Is there a solution to this? ',
+         'question')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 130402,
+    'sentences': (
+        ('Currently entering a new bill in purchases 1. Load line with description 2. Manually allocate a portion to a tracing detail 3. Repeat steps 1. and 2. in the same bill to apportion the same item to various tracking details. ',
+         'context'),
+        ('e.g. Energy bills each month need to be split across various product lines to show the actual costs incurred for each area of the business.',
+         'context'),
+        ('We use the P&L Report to show in real time the costs incurred to each product line. ',
+         'context'),
+        ('This information in turn assists in budgeting/ P&L analysis and third party information requests by confirm costs the real time. ',
+         'context'),
+        ('In our case currently we are manually loading the same item 6 times to get access to this information. ',
+         'context'),
+        ('Many bills have multiple items which all need splitting, to gain the detail we require.',
+         'context'),
+        ('Suggestion 1. Load line with description 2. A similar function to the "bank rules reconcile" be added.',
+         'problem'),
+        ('* The allocated ratios would link to the "Tracking function" rather than "Account"',
+         'context'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 130542,
+    'sentences': (
+        ("I would like to be able to switch on an 'advanced invoice' setting so that along with the 'invoice date' and 'due date' you can select a 'journal to' date when entering invoices.",
+         'problem'),
+        ('When you save the invoice, this would then create the relevant journal entries to re-allocate the expense/income to the requested month (leaving VAT entries where they are).',
+         'context'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 132982,
+    'sentences': (
+        ('I love the expense claim feature in Xero touch except that the users cannot submit a claim. ',
+         'problem'),
+        ('It would be great if that could be done from IOS or Android and those users would not need to login to a computer at the office. ',
+         'context'),
+        ('They could do all they need to do from their iPhone.',
+         'context'),
+        ('Users love taking photos of their receipts on their iPhone but often forget to open the full Xero later in a computer to submit the claim and claims are being missed. ',
+         'problem'),
+        ('It would be great if they could snap a photo and submit and then the accounts department could do the rest.',
+         'context'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 135388,
+    'sentences': (
+        ("I have been trying to update the bank feed for the last two days (myself and my colleague have tried on two accounts) and it says that it is refreshing but when it's finished no new transactions are added, yet looking at our Lloyds online banking I can see lots of new payments that haven't been imported, ",
+         'problem'),
+        ('I have tried a good 5 times already today with the same result each time',
+         'context'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 135533,
+    'sentences': (
+        ('Hello, I am wondering if somebody can please help me. ',
+         'context'),
+        ('I need to reconcile balance transfers between the business current account and the business reserve account. ',
+         'context'),
+        ('Please, do you know which account should I use to reconcile? ',
+         'problem'),
+        ('Thank you very much for your help Edita',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 136533,
+    'sentences': (
+        ('I am a new Xero user and I am a bit confused.',
+         'problem'),
+        ('I have a 50000 EUR bill, and I made a prepayment (overpayment) to my supplier in both EURO and USD currencies.',
+         'context'),
+        ('Now, I want to use my USD overpayment to credit this bill, but Xero only shows up same currency overpayments.',
+         'problem'),
+        ('How should I make it work? ',
+         'question'),
+        ('Thanks! ',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 137509,
+    'sentences': (
+        ('How is it when you view your payslips and it shows your SGC but is not deducted from their net pay? ',
+         'problem'),
+        ('Am I doing something wrong? ',
+         'question'),
+        ('Is it because it shows pending? ',
+         'question'),
+        ('So does that mean we manually subtract it from their net pay. ',
+         'question'),
+        ('But in doing that it will show a wrong amount for payment. ',
+         'problem'),
+        ('Need help!!!',
+         'outroduction'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 137538,
+    'sentences': (
+        ("Hey all,I have an interesting situation. ",
+         'context'),
+        ('I have two employees who are married. ',
+         'context'),
+        ('One has taken a lot more leave than the other (visiting the homeland). ',
+         'context'),
+        ('The one with less leave is going away again, and will be at -62 hours after it is applied. ',
+         'context'),
+        ('Is there a way for the employee with lots of leave, to transfer leave to the other one? ',
+         'problem'),
+        ('They wish to do this and I don\'t see any reason why not. ',
+         'context'),
+        ('Another situation is if an employee wanted to trade in some leave for cash... ',
+         'problem'),
+        ('I wouldn\'t be opposed to this and have done it in the past... ',
+         'context'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 139243,
+    'sentences': (
+        ('We are trying the new Shopify Xero integration app. ',
+         'context'),
+        ('The app places all Shopify orders into a single account, but we would like it to place orders into different accounts depending on product type or sales channel',
+         'problem'),
+        ('We have also tried the CarryTheOne solution and it doesnt seem to do it either.',
+         'context'),
+        ('Are there any Shopify integration apps that allow filtering of orders as they are imported? ',
+         'question'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 139257,
+    'sentences': (
+        ("I like the principle of being able to use standard MS tools such as Excel to manipulate data and extend the use of Xero. ",
+         'context'),
+        ("Spotlight is nice for Business Intelligence views but I am a small business that the costs can't carry. ",
+         'context'),
+        ('I am particularly interested in Moving Annual Averages to provide a normalised view of activity as I operate in the highly seasonal tourist arena. ',
+         'context'),
+        ('Is there an ODBC link available to connect Excel to the Xero gl balances data tables? ',
+         'question'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 139870,
+    'sentences': (
+        ("Hi - Ive been really disappointed lately with the length of time that it takes for the support team to respond and then give advice about issues. ",
+         'problem'),
+        ('Our company deals with other similar organisations and the turn around time is far less. ',
+         'context'),
+        ('This is really important to us because sometimes a quick question can delay progression of a task. ',
+         'context'),
+        ('One of the selling points for us was the previous quick turn around from contacting support to getting a response - we thought it was great. ',
+         'context'),
+        ('Lately we get an email stating they will be in touch within 24 hours, at times it has been longer than this, and then the response has been an auto generated link to a site that usually doesn\'t answer the question. ',
+         'problem'),
+        ('Personal service is really, really important.',
+         'context')
+    )
+})
+
+questions_sentences.append({
+    'question_id': 139107,
+    'sentences': (
+        ('Hi,I have a client in the fuel distribution industry. ',
+         'context'),
+        ('They purchase their fuel in bulk and then, after paying for the respective fuel levies and duties that apply for the particular country, they manufacture into a finished product the fuel available for bulk delivery to their customers. ',
+         'context'),
+        ('Has anyone got a cheaper manufacturing add-on their can recommend other than those available in cin7, unleashed or dear inventory as it is a very simple manufacturing process that does not need a highly complex solution. ',
+         'question'),
+    )
+})
+
+questions_sentences.append({
+    'question_id': 126915,
+    'sentences': (
+        ("I have a Paypal bank acnt on my dashboard for my online sales. ",
+         'context'),
+        ('I also have my business acnt for my day to day business.',
+         'context'),
+        ('It looks as though after I have reconciled the acnts they are both treated as one in terms of reporting etc. ',
+         'problem'),
+        ('Is this the case? ',
+         'question'),
+        ("So it's like they are separate acnts for the purposes of paying and receiving funds but they are collated as a whole in terms of the reports etc.",
+         'question'),
+        ('Hope that makes sense :-) Thanks',
+         'outroduction'),
+    )
+})
+
 
 questions_sentences.append({
     'question_id': 140029,
@@ -3645,7 +3985,7 @@ questions_sentences.append({
     )
 })
 
-# update_db(questions_sentences)
+update_db(questions_sentences)
 
 """
 import pyLDAvis.gensim
