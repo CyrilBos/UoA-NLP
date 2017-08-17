@@ -76,7 +76,7 @@ class KMeansClusterizer(Clusterizer):
             print()
 
         km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=10,
-                    verbose=self.__verbose, n_jobs=self.__jobs)
+                    verbose=self._verbose, n_jobs=self._jobs)
 
         print("Clustering sparse data with %s" % km)
 
@@ -96,7 +96,7 @@ class KMeansClusterizer(Clusterizer):
             self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
 
-        lda = LatentDirichletAllocation(self.__preprocessed_data, self.__jobs)
+        lda = LatentDirichletAllocation(self.__preprocessed_data, self._jobs)
         lda_model, corpus, vocab = lda.compute(n_features, lda_iter)
 
         X = []

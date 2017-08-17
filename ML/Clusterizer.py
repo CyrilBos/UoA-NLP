@@ -28,7 +28,6 @@ class Clusterizer:
 
     @classmethod
     def get_clusters_from_labels(self, items, labels):
-        #clusters = [[] for dummy in range(len(labels))]
         clusters = {}
         for i in range(len(labels)):
             if labels[i] not in clusters:

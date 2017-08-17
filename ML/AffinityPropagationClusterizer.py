@@ -11,9 +11,9 @@ class AffinityPropagationClusterizer(Clusterizer):
         tf_idf_vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
                                      min_df=2, stop_words='english')
 
-        X = tf_idf_vectorizer.fit_transform(self.__data)
+        X = tf_idf_vectorizer.fit_transform(self._data)
 
-        af = AffinityPropagation(preference=-50, max_iter=max_iter, verbose=self.__verbose).fit(X)
+        af = AffinityPropagation(preference=-50, max_iter=max_iter, verbose=self._verbose).fit(X)
 
         cluster_centers_indices = af.cluster_centers_indices_
         labels = af.labels_
