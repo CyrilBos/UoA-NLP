@@ -7,7 +7,6 @@ from ML.AffinityPropagationClusterizer import AffinityPropagationClusterizer
 from ML.DBSCANClusterizer import DBSCANClusterizer
 from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
 from ML.HierarchicalClusterizer import HierarchicalClusterizer
-from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
 preprocess = False
@@ -21,7 +20,7 @@ data, target, target_names = dbmg.get_training_data('Business')
 
 ###################################
 
-forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess) #SGDClassifier(data, target, target_names)
+forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess)
 forum_question_classifier.train()
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision(1))
 
