@@ -40,11 +40,7 @@ class KMeansClusterizer(Clusterizer):
         self.__target = target
         self.__target_names = target_names
 
-        self.__labels = self.__target
         self.__true_k = np.unique(self.__target).shape[0]
-
-        self.__jobs = jobs
-        self.__verbose = verbose
 
     def idf_clusterize(self, n_components=None, n_clusters=-1, max_iter=5):
         """
@@ -71,7 +67,7 @@ class KMeansClusterizer(Clusterizer):
             normalizer = Normalizer(copy=False)
             lsa = make_pipeline(svd, normalizer)
 
-            self.__preprocessed_data = lsa.fit_transform(self.__preprocessed_data)
+            self.__preprocessed_data = lsa.fit_transform(self._preprocessed_data)
 
             explained_variance = svd.explained_variance_ratio_.sum()
             print("Explained variance of the SVD step: {}%".format(
@@ -86,7 +82,7 @@ class KMeansClusterizer(Clusterizer):
 
         km.fit(self.__preprocessed_data)
 
-        self.__labels = km.labels_
+        self._labels = km.labels_
 
         return km
 

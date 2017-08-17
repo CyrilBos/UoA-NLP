@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 from nltk.tokenize import sent_tokenize
 
@@ -14,6 +16,9 @@ preprocess = False
 n_features = 20
 jobs = 3
 verbose = True
+ignored_categories = ['outroduction', 'code']
+
+algo_opt = sys.argv[1]
 
 dbmg = DatabaseHelper(connection_string)
 questions = dbmg.get_questions_content()
@@ -64,57 +69,51 @@ def kmeans(data, target, target_names):
     n_clusters = int(len(data) / 3)
     clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
-    clusterizer.print_to_file('broken_idf_clusters_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
+    clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters)
 
-def dbscan(data):
+def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
-    clusterizer.compute(eps=0.5, min_samples=20)
-
-    core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-    core_samples_mask[db.core_sample_indices_] = True
-    labels = db.labels_
-
-    # Number of clusters in labels, ignoring noise if present.
-    n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-    print('{} clusters'.format(n_clusters))
-    clusters = [data[labels[i]] for i in range(n_clusters)] 
-    #cluster_dict = {i: data[labels == i] for i in range(n_clusters)}
-    for cluster in clusters:
-        print(cluster)    
-    #for item in cluster:
-         #   print(item)
+    db = clusterizer.compute(eps=0.5, min_samples=5)
+    clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
 
     clusterizer.compute(n_features=10, max_iter=1)
 
-def hierarchical(data, n_clusters, linkage):
-    clusterizer = HierarchicalClusterizer(data, n_clusters, linkage)
-    hl = clusterizer.compute(n_features=10)
+def hierarchical(data, linkage, category):
+    n_clusters = int(len(data) / 3)
+    clusterizer = HierarchicalClusterizer(data, n_clusters, linkage=linkage)
+    hl = clusterizer.compute()
     labels = hl.labels_
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
 
-    clusterizer.print_clusters()
-    clusterizer.print_to_file()
+    clusterizer.print_clusters('hierarchical_{}_{}_{}'.format(linkage, category, n_clusters))
     #clusters = [data[labels == i] for i in range(n_clusters)]
     #for row in clusters:
     #    print(row)
 
 
 for category in predicted_categories:
-    if len(predicted_categories[category]) > 0 and category != 'outroduction':
+    if len(predicted_categories[category]) > 0 and category not in ignored_categories:
         #cluster_target_names.append(category)
         #for sentence in predicted_categories[category]:
             #cluster_data[category].append(sentence)
             #cluster_target[category].append(category)
 
-        #kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
-        dbscan(cluster_data[category])
-        #hierarchical(cluster_data[category],n_clusters,'ward')
-        #affinity(cluster_data[category], cluster_target[category], [category])
+        if algo_opt == 'kmeans':
+            kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+        elif algo_opt == 'dbscan':
+            dbscan(predicted_categories[category], category)
+        elif algo_opt == 'hierarchical':
+            hierarchical(predicted_categories[category], 'ward', category)
+        elif algo_opt == 'affinity':
+            affinity(cluster_data[category], cluster_target[category], [category])
+        else:
+            print('Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
+            exit()
 
         """#Seems too heavy to run
         #"Clustering" the documents using a recommender
