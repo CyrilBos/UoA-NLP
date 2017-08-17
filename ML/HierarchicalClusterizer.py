@@ -1,29 +1,23 @@
 import numpy as np
 import csv
+
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import Normalizer
 
-from ML.ClassifierData import ClassifierData
+from ML.Clusterizer import Clusterizer
 
-class HierarchicalClusterizer:
-    def __init__(self, data, n_clusters, linkage = 'ward'):
+class HierarchicalClusterizer(Clusterizer):
+    def __init__(self, data, n_clusters, n_features=10, preprocess=False, linkage = 'ward', verbose=True, jobs=1):
+        super().__init__(data, n_features=n_features, verbose=verbose, jobs=jobs, preprocess=preprocess)
         self.__n_clusters = n_clusters
-        self.__data = data
         self.__linkage = linkage
 
-    def compute(self, n_features):
-
-        tf_idf_vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
-                                     min_df=2, stop_words='english')
-
-
-        X = (tf_idf_vectorizer.fit_transform(self.__data)).toarray()
-
-        self.__ac = AgglomerativeClustering(n_clusters=self.__n_clusters, linkage=self.__linkage).fit(X)
+    def compute(self):
+        self.__ac = AgglomerativeClustering(n_clusters=self.__n_clusters, linkage=self.__linkage).fit(self._preprocessed_data.toarray())
         
         return self.__ac
-
+"""
     def print_clusters(self, min_len = 2):
         labels = (self.__ac).labels_
        
@@ -72,3 +66,4 @@ class HierarchicalClusterizer:
             w = csv.DictWriter(f, clusters.keys())
             w.writeheader()
             w.writerow(clusters)
+"""

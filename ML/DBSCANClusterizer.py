@@ -1,18 +1,18 @@
 from sklearn.cluster import DBSCAN
 from sklearn.feature_extraction.text import TfidfVectorizer
 import csv
-
+import numpy as np
 from ML.Clusterizer import Clusterizer
 from NLP.InputPreprocessor import InputPreprocessor
 
 
 class DBSCANClusterizer(Clusterizer):
     def compute(self, eps=0.3, min_samples=10):
-        dbscan = DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self.__jobs, algorithm='ball_tree').fit(self.__data.toarray())
-        self.__labels = dbscan.labels_
+        dbscan = DBSCAN(eps=0.3, min_samples=min_samples, n_jobs=self._jobs, algorithm='ball_tree').fit(self._preprocessed_data.toarray())
+        self._labels = dbscan.labels_
 
         return dbscan
-
+    """
     def print_clusters(self, min_len=2):
         clusters = {}
         n = 0
@@ -47,3 +47,4 @@ class DBSCANClusterizer(Clusterizer):
             w = csv.DictWriter(f, clusters.keys())
             w.writeheader()
             w.writerow(clusters)
+    """
