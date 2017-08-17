@@ -17,6 +17,12 @@ jobs = 3
 verbose = True
 ignored_categories = ['outroduction', 'code']
 
+def print_usage():
+    print('Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
+    exit()
+
+if sys.argv < 2:
+
 algo_opt = sys.argv[1]
 
 dbmg = DatabaseHelper(connection_string)
@@ -103,7 +109,7 @@ for category in predicted_categories:
             #cluster_target[category].append(category)
 
         if algo_opt == 'kmeans':
-            kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+            kmeans(cluster_data[category], cluster_target[category], [category])
         elif algo_opt == 'dbscan':
             dbscan(predicted_categories[category], category)
         elif algo_opt == 'hierarchical':
@@ -111,10 +117,9 @@ for category in predicted_categories:
         elif algo_opt == 'affinity':
             affinity(cluster_data[category], cluster_target[category], [category])
         else:
-            print('Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
-            exit()
+            print_usage()
 
-        """#Seems too heavy to run
+        """#old code of running recommender on the data
         #"Clustering" the documents using a recommender
         recommend_data = {'id':[], 'description':[]}
 

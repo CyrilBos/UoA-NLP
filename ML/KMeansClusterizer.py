@@ -113,7 +113,7 @@ class KMeansClusterizer(Clusterizer):
         print("n_samples: %d, n_features: %d" % X.shape)
 
         km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
-                    verbose=self.__verbose, n_jobs=self.__jobs)
+                    verbose=self._verbose, n_jobs=self._jobs)
 
         print("Clustering sparse data with %s" % km)
 
@@ -125,7 +125,7 @@ class KMeansClusterizer(Clusterizer):
         clusters = [[] for dummy in range(n_clusters)]
 
         i = 0
-        for cluster_num in self.__labels:
+        for cluster_num in self._labels:
             clusters[cluster_num].append(cluster_category_data[i])
             i += 1
 
@@ -149,10 +149,10 @@ class KMeansClusterizer(Clusterizer):
         :param X: Ground truth feature list
         :return:
         """
-        return metrics.homogeneity_score(self.__labels, km.labels_), \
-               metrics.completeness_score(self.__labels, km.labels_), \
-               metrics.v_measure_score(self.__labels, km.labels_), \
-               metrics.adjusted_rand_score(self.__labels, km.labels_), \
+        return metrics.homogeneity_score(self._labels, km.labels_), \
+               metrics.completeness_score(self._labels, km.labels_), \
+               metrics.v_measure_score(self._labels, km.labels_), \
+               metrics.adjusted_rand_score(self._labels, km.labels_), \
                metrics.silhouette_score(X, km.labels_, sample_size=1000)
 
     def print_metrics(self, km, X):
@@ -162,10 +162,10 @@ class KMeansClusterizer(Clusterizer):
         :param X: Ground truth feature list
         :return:
         """
-        print("Homogeneity: %0.3f" % metrics.homogeneity_score(self.__labels, km.labels_))
-        print("Completeness: %0.3f" % metrics.completeness_score(self.__labels, km.labels_))
-        print("V-measure: %0.3f" % metrics.v_measure_score(self.__labels, km.labels_))
+        print("Homogeneity: %0.3f" % metrics.homogeneity_score(self._labels, km.labels_))
+        print("Completeness: %0.3f" % metrics.completeness_score(self._labels, km.labels_))
+        print("V-measure: %0.3f" % metrics.v_measure_score(self._labels, km.labels_))
         print("Adjusted Rand-Index: %.3f"
-              % metrics.adjusted_rand_score(self.__labels, km.labels_))
+              % metrics.adjusted_rand_score(self._labels, km.labels_))
         print("Silhouette Coefficient: %0.3f"
               % metrics.silhouette_score(X, km.labels_, sample_size=1000))
