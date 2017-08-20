@@ -63,7 +63,7 @@ class Clusterizer:
         filename = 'clusters-' + timestr + '.csv'
         clusters = self.get_clusters()
 
-        with open(filename, 'wb') as csv_file:
+        with open(filename, 'w', newline="") as csv_file:
             writer = csv.writer(csv_file)
             for key, value in clusters.items():
                 writer.writerow([key, value])

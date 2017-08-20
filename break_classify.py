@@ -76,6 +76,7 @@ def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
     clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
+    clusterizer.print_to_csv();
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
