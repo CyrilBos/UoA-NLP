@@ -71,12 +71,15 @@ def kmeans(data, target, target_names):
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters)
+    get_avg_sihouette()
+
 
 def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
     clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
     clusterizer.print_to_csv();
+
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)

@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 import csv, time
 from NLP.InputPreprocessor import InputPreprocessor
-
+from ML.SilhouetteValidator import SilhouetteValidator
 
 class Clusterizer:
     def __init__(self, data, n_features=10, preprocess=False, jobs=1, verbose=True):
@@ -52,7 +52,7 @@ class Clusterizer:
             print('##### CLUSTER {} #####'.format(n))
             if filename:
                 file.write('##### CLUSTER {} #####\n'.format(n))
-            for item in clusters[cluster]:
+            for item in clusters[cluster]: 
                 print(item)
                 if filename:
                     file.write(item + '\n')
@@ -67,4 +67,8 @@ class Clusterizer:
             writer = csv.writer(csv_file)
             for key, value in clusters.items():
                 writer.writerow([key, value])
+
+    def get_avg_sihouette(self):
+        validator = SilhouetteValidator(len(self._labels), self._data, self._labels)
+        SilhouetteValidator.compute()
 
