@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+import csv, time
 from NLP.InputPreprocessor import InputPreprocessor
 
 
@@ -57,4 +57,14 @@ class Clusterizer:
                 if filename:
                     file.write(item + '\n')
             n += 1
+
+    def print_to_csv(self):
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        filename = 'clusters-' + timestr + '.csv'
+        clusters = self.get_clusters()
+
+        with open(filename, 'wb') as csv_file:
+            writer = csv.writer(csv_file)
+            for key, value in clusters.items():
+                writer.writerow([key, value])
 
