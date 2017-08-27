@@ -10,7 +10,7 @@ def GenerateConfig(configfile_name = "config.ini"):
         # Add content to the file
         Config = configparser.ConfigParser()
         Config.add_section('data')
-        Config.set('data', 'data_source  (e.g. xero, github)', 'xero')
+        Config.set('data', 'data_source', 'xero')
         Config.set('data', 'training_data', 'Business')
         Config.add_section('other')
         Config.set('other', 'preprocess', 'False')

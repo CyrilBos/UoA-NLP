@@ -1,4 +1,4 @@
-import sys
+import sys, os, configparser
 import Utils.GenerateConfig as ConfigGen
 import numpy as np
 from nltk.tokenize import sent_tokenize
@@ -17,27 +17,25 @@ configfile_name = "config.ini"
 if not os.path.isfile(configfile_name):
     ConfigGen.GenerateConfig(configfile_name);
 
-with open("config.ini") as f:
-    sample_config = f.read()
-config = ConfigParser.RawConfigParser(allow_no_value=True)
-config.readfp(io.BytesIO(sample_config))
+config = configparser.ConfigParser()
+config.read(configfile_name)
 
-try:
-    preprocess = config.getboolean('other', 'preprocess ')
-    n_features = config.get('other', 'n_features')
-    jobs = config.get('other', 'jobs')
-    verbose = config.getboolean('other', 'verbose ')
-    ignored_categories = config.get('other', 'ignored_categories')
+preprocess = config['other']['preprocess']
+#try:   
+n_features = config['other']['n_features']
+jobs = config['other']['jobs']
+verbose = config['other']['verbose']
+ignored_categories = config['other']['ignored_categories']
 
-    if (config.get('data', 'data_source').lower() == "xero"):
-        dbmg = DatabaseHelper(connection_string)
-        questions = dbmg.get_questions_content()
-        data, target, target_names = dbmg.get_training_data(config.get('data', 'training_data'))
-except:
-    os.remove(configfile_name)
-    ConfigGen.GenerateConfig(configfile_name)
-    print("Config corrupted. File has been reset, please try again")
-    exit()
+if (config['data']['data_source'] == "xero"):
+    dbmg = DatabaseHelper(connection_string)
+    questions = dbmg.get_questions_content()
+    data, target, target_names = dbmg.get_training_data(config['data']['training_data'])
+#except:
+ #   os.remove(configfile_name)
+  #  ConfigGen.GenerateConfig(configfile_name)
+   # print("Config corrupted. File has been reset, please try again")
+   # exit()
 
 algo_opt = sys.argv[1]
 
