@@ -1,5 +1,5 @@
 import sys
-
+import Utils.GenerateConfig as ConfigGen
 import numpy as np
 from nltk.tokenize import sent_tokenize
 
@@ -12,17 +12,34 @@ from ML.HierarchicalClusterizer import HierarchicalClusterizer
 from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
-preprocess = False
-n_features = 20
-jobs = 3
-verbose = True
-ignored_categories = ['outroduction', 'code']
+configfile_name = "config.ini"
+# Check if there is already a configurtion file
+if not os.path.isfile(configfile_name):
+    ConfigGen.GenerateConfig(configfile_name);
+
+with open("config.ini") as f:
+    sample_config = f.read()
+config = ConfigParser.RawConfigParser(allow_no_value=True)
+config.readfp(io.BytesIO(sample_config))
+
+try:
+    preprocess = config.getboolean('other', 'preprocess ')
+    n_features = config.get('other', 'n_features')
+    jobs = config.get('other', 'jobs')
+    verbose = config.getboolean('other', 'verbose ')
+    ignored_categories = config.get('other', 'ignored_categories')
+
+    if (config.get('data', 'data_source').lower() == "xero"):
+        dbmg = DatabaseHelper(connection_string)
+        questions = dbmg.get_questions_content()
+        data, target, target_names = dbmg.get_training_data(config.get('data', 'training_data'))
+except:
+    os.remove(configfile_name)
+    ConfigGen.GenerateConfig(configfile_name)
+    print("Config corrupted. File has been reset, please try again")
+    exit()
 
 algo_opt = sys.argv[1]
-
-dbmg = DatabaseHelper(connection_string)
-questions = dbmg.get_questions_content()
-data, target, target_names = dbmg.get_training_data('Business')
 
 ###################################
 
