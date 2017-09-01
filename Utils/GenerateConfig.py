@@ -14,7 +14,7 @@ def GenerateConfig(configfile_name = "config.ini"):
         Config.set('data', 'training_data', 'Business')
 
         Config.add_section('printing')
-        Config.set('printing','print_to_csv', '0')
+        Config.set('printing','print_to_csv', '1')
         Config.set('printing','print_to_file', '0')
 
         Config.add_section('other')
