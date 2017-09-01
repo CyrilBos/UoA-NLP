@@ -93,7 +93,7 @@ def kmeans(data, target, target_names):
     if (printToFile):
         clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters)
-    get_avg_sihouette()
+    #get_avg_sihouette()
     return clusterizer
 
 
@@ -113,7 +113,7 @@ def affinity(data, target, target_names):
     return clusterizer
 
 def hierarchical(data, linkage):
-    n_clusters = int(len(data) / 3)
+    n_clusters = int(len(data) / 30)
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage=linkage)
     hl = clusterizer.compute()
     labels = hl.labels_
@@ -129,16 +129,16 @@ def hierarchical(data, linkage):
 for category in predicted_categories:
     if len(predicted_categories[category]) > 0 and category not in ignored_categories:
         #cluster_target_names.append(category)
-        #for sentence in predicted_categories[category]:
-            #cluster_data[category].append(sentence)
-            #cluster_target[category].append(category)
+        for sentence in predicted_categories[category]:
+            cluster_data[category].append(sentence)
+            cluster_target[category].append(category)
 
         if algo_opt == 'kmeans':
             clusterizer = kmeans(cluster_data[category], cluster_target[category], [category])
         elif algo_opt == 'dbscan':
             clusterizer = dbscan(predicted_categories[category], category)
         elif algo_opt == 'hierarchical':
-            clusterizer = hierarchical(predicted_categories[category], 'ward')
+            clusterizer = hierarchical(cluster_data[category], 'ward')
         elif algo_opt == 'affinity':
             clusterizer = affinity(cluster_data[category], cluster_target[category], [category])
         else:

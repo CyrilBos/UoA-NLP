@@ -1,6 +1,5 @@
 import numpy as np
 
-
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
@@ -19,9 +18,9 @@ class KMeansClusterizer(Clusterizer):
     """
 
     def __init__(self, data, target, target_names, n_features, preprocess=False, jobs=1, verbose=True):
+        super().__init__(data, n_features=n_features, verbose=verbose, jobs=jobs, preprocess=preprocess)
+     
         """
-        Initializes the new KMeansClusterizer instance with the given data and parameters.
-
         :param data: the text documents
         :type data: Union[list, tuple]
         :param target: holds the target_names index of each document
@@ -35,12 +34,13 @@ class KMeansClusterizer(Clusterizer):
         :type verbose: bool
         """
 
-        super().__init__(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
-
+        self.__data = data
         self.__target = target
         self.__target_names = target_names
 
         self.__true_k = np.unique(self.__target).shape[0]
+
+        print(self._verbose)
 
     def idf_clusterize(self, n_components=None, n_clusters=-1, max_iter=5):
         """
@@ -96,7 +96,7 @@ class KMeansClusterizer(Clusterizer):
             self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
 
-        lda = LatentDirichletAllocation(self.__preprocessed_data, self.__jobs)
+        lda = LatentDirichletAllocation(self._preprocessed_data, self._jobs)
         lda_model, corpus, vocab = lda.compute(n_features, lda_iter)
 
         X = []
@@ -113,7 +113,7 @@ class KMeansClusterizer(Clusterizer):
         print("n_samples: %d, n_features: %d" % X.shape)
 
         km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
-                    verbose=self.__verbose, n_jobs=self.__jobs)
+                    verbose=self._verbose, n_jobs=self._jobs)
 
         print("Clustering sparse data with %s" % km)
 

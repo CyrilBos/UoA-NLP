@@ -5,6 +5,7 @@ from ML.SilhouetteValidator import SilhouetteValidator
 
 class Clusterizer:
     def __init__(self, data, n_features=10, preprocess=False, jobs=1, verbose=True):
+        print("Running Clusterizer")
         self._clusters = None
         self._labels = []
         self._data = data
