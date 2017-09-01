@@ -12,11 +12,14 @@ class HierarchicalClusterizer(Clusterizer):
         super().__init__(data, n_features=n_features, verbose=verbose, jobs=jobs, preprocess=preprocess)
         self.__n_clusters = n_clusters
         self.__linkage = linkage
+        self.__data = data
 
     def compute(self):
         self.__ac = AgglomerativeClustering(n_clusters=self.__n_clusters, linkage=self.__linkage).fit(self._preprocessed_data.toarray())
-        
         return self.__ac
+
+
+
 """
     def print_clusters(self, min_len = 2):
         labels = (self.__ac).labels_

@@ -112,7 +112,7 @@ def affinity(data, target, target_names):
     clusterizer.compute(n_features=10, max_iter=1)
     return clusterizer
 
-def hierarchical(data, linkage, category):
+def hierarchical(data, linkage):
     n_clusters = int(len(data) / 3)
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage=linkage)
     hl = clusterizer.compute()
@@ -138,7 +138,7 @@ for category in predicted_categories:
         elif algo_opt == 'dbscan':
             clusterizer = dbscan(predicted_categories[category], category)
         elif algo_opt == 'hierarchical':
-            clusterizer = hierarchical(predicted_categories[category], 'ward', category)
+            clusterizer = hierarchical(predicted_categories[category], 'ward')
         elif algo_opt == 'affinity':
             clusterizer = affinity(cluster_data[category], cluster_target[category], [category])
         else:
