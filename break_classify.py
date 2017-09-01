@@ -20,17 +20,20 @@ if not os.path.isfile(configfile_name):
 config = configparser.ConfigParser()
 config.read(configfile_name)
 
-preprocess = config['other']['preprocess']
+preprocess = int(config['other']['preprocess'])
 #try:   
-n_features = config['other']['n_features']
-jobs = config['other']['jobs']
-verbose = config['other']['verbose']
-ignored_categories = config['other']['ignored_categories']
+n_features = int(config['other']['n_features'])
+jobs = int(config['other']['jobs'])
+verbose = int(config['other']['verbose'])
+ignored_categories = (config['other']['ignored_categories'])
 
 if (config['data']['data_source'] == "xero"):
     dbmg = DatabaseHelper(connection_string)
     questions = dbmg.get_questions_content()
     data, target, target_names = dbmg.get_training_data(config['data']['training_data'])
+else:
+    print("invalid Data source")
+    exit()
 #except:
  #   os.remove(configfile_name)
   #  ConfigGen.GenerateConfig(configfile_name)
