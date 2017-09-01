@@ -20,25 +20,28 @@ if not os.path.isfile(configfile_name):
 config = configparser.ConfigParser()
 config.read(configfile_name)
 
-preprocess = int(config['other']['preprocess'])
-#try:   
-n_features = int(config['other']['n_features'])
-jobs = int(config['other']['jobs'])
-verbose = int(config['other']['verbose'])
-ignored_categories = (config['other']['ignored_categories'])
+try:
+    printToFile = int(config['printing']['print_to_file'])
+    printToCSV = int(config['printing']['print_to_csv'])
 
-if (config['data']['data_source'] == "xero"):
-    dbmg = DatabaseHelper(connection_string)
-    questions = dbmg.get_questions_content()
-    data, target, target_names = dbmg.get_training_data(config['data']['training_data'])
-else:
-    print("invalid Data source")
+    preprocess = int(config['other']['preprocess'])
+    n_features = int(config['other']['n_features'])
+    jobs = int(config['other']['jobs'])
+    verbose = int(config['other']['verbose'])
+    ignored_categories = (config['other']['ignored_categories'])
+
+    if (config['data']['data_source'] == "xero"):
+        dbmg = DatabaseHelper(connection_string)
+        questions = dbmg.get_questions_content()
+        data, target, target_names = dbmg.get_training_data(config['data']['training_data'])
+    else:
+        print("invalid Data source")
+        exit()
+except:
+    os.remove(configfile_name)
+    ConfigGen.GenerateConfig(configfile_name)
+    print("Config corrupted. File has been reset, please try again")
     exit()
-#except:
- #   os.remove(configfile_name)
-  #  ConfigGen.GenerateConfig(configfile_name)
-   # print("Config corrupted. File has been reset, please try again")
-   # exit()
 
 algo_opt = sys.argv[1]
 
@@ -87,22 +90,27 @@ def kmeans(data, target, target_names):
     n_clusters = int(len(data) / 3)
     clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
-    clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
+    if (printToFile):
+        clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
                               n_clusters)
     get_avg_sihouette()
+    return clusterizer
 
 
 def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
-    clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
-    clusterizer.print_to_csv();
+    
+    if (printToFile):
+        clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
+
+    return clusterizer
 
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
-
     clusterizer.compute(n_features=10, max_iter=1)
+    return clusterizer
 
 def hierarchical(data, linkage, category):
     n_clusters = int(len(data) / 3)
@@ -111,12 +119,12 @@ def hierarchical(data, linkage, category):
     labels = hl.labels_
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
+    
+    if (printToFile):
+        clusterizer.print_clusters('hierarchical_{}_{}_{}'.format(linkage, category, n_clusters))
 
-    clusterizer.print_clusters('hierarchical_{}_{}_{}'.format(linkage, category, n_clusters))
-    #clusters = [data[labels == i] for i in range(n_clusters)]
-    #for row in clusters:
-    #    print(row)
 
+    return clusterizer
 
 for category in predicted_categories:
     if len(predicted_categories[category]) > 0 and category not in ignored_categories:
@@ -126,16 +134,19 @@ for category in predicted_categories:
             #cluster_target[category].append(category)
 
         if algo_opt == 'kmeans':
-            kmeans(cluster_data[category], cluster_target[category], [category], n_clusters)
+            clusterizer = kmeans(cluster_data[category], cluster_target[category], [category])
         elif algo_opt == 'dbscan':
-            dbscan(predicted_categories[category], category)
+            clusterizer = dbscan(predicted_categories[category], category)
         elif algo_opt == 'hierarchical':
-            hierarchical(predicted_categories[category], 'ward', category)
+            clusterizer = hierarchical(predicted_categories[category], 'ward', category)
         elif algo_opt == 'affinity':
-            affinity(cluster_data[category], cluster_target[category], [category])
+            clusterizer = affinity(cluster_data[category], cluster_target[category], [category])
         else:
             print('Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
             exit()
+
+        if (printToCSV):
+            clusterizer.print_to_csv();
 
         """#Seems too heavy to run
         #"Clustering" the documents using a recommender

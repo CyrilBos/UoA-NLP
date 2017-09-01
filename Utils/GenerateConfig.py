@@ -12,12 +12,19 @@ def GenerateConfig(configfile_name = "config.ini"):
         Config.add_section('data')
         Config.set('data', 'data_source', 'xero')
         Config.set('data', 'training_data', 'Business')
+
+        Config.add_section('printing')
+        Config.set('printing','print_to_csv', '0')
+        Config.set('printing','print_to_file', '0')
+
         Config.add_section('other')
-        Config.set('other', 'preprocess', 'False')
+        Config.set('other', 'preprocess', '0')
         Config.set('other', 'n_features', '20')
         Config.set('other', 'jobs', '3')
-        Config.set('other', 'verbose', 'True')
+        Config.set('other', 'verbose', '1')
         Config.set('other', 'ignored_categories', 
             "['outroduction', 'code']")
         Config.write(cfgfile)
         cfgfile.close()
+
+GenerateConfig()
