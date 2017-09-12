@@ -100,6 +100,8 @@ def kmeans(data, target, target_names):
 def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
+
+    sihouette = clusterizer.get_avg_sihouette();
     
     if (printToFile):
         clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
