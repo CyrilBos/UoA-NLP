@@ -96,7 +96,7 @@ class KMeansClusterizer(Clusterizer):
             self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
 
-        lda = LatentDirichletAllocation(self._preprocessed_data, self._jobs)
+        lda = LatentDirichletAllocation(self._data, self._jobs)
         lda_model, corpus, vocab = lda.compute(n_features, lda_iter)
 
         X = []
@@ -115,17 +115,19 @@ class KMeansClusterizer(Clusterizer):
         km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
                     verbose=self._verbose, n_jobs=self._jobs)
 
+        
         print("Clustering sparse data with %s" % km)
 
         self.__processed_data = km.fit(X)
-
+        self._labels = km.labels_
         return km, self.__processed_data
 
+    '''
     def print_to_file(self, filename, cluster_category_data, n_clusters):
         clusters = [[] for dummy in range(n_clusters)]
 
         i = 0
-        for cluster_num in self.__labels:
+        for cluster_num in self._labels:
             clusters[cluster_num].append(cluster_category_data[i])
             i += 1
 
@@ -141,7 +143,8 @@ class KMeansClusterizer(Clusterizer):
                     # print(doc)
                     save_file.write(doc + '\n')
             n += 1
-
+    '''
+    
     def get_metrics(self, km, X):
         """
         Computes and returns the metrics using km and X as ground truth

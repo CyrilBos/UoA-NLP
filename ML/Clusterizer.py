@@ -69,7 +69,7 @@ class Clusterizer:
             for key, value in clusters.items():
                 writer.writerow([key, value])
 
-    def get_avg_sihouette(self):
+    def get_avg_silhouette(self):
         validator = SilhouetteValidator(len(self._labels), self._preprocessed_data, self._labels)
         validator.compute()
 

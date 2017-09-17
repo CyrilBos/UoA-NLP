@@ -64,9 +64,13 @@ for category_name in target_names:
     cluster_data[category_name] = []
     cluster_target[category_name] = []
 
-
+i = 1000   # this is to make it run faster for testing, remove during normal runs
 for question in questions:
+    if (i <= 0):
+        break
+    i = i - 1
     question = question.replace('.', '. ').replace('.  ', '. ').replace('?', '? ').replace('?  ', '? ').replace('!', '! ').replace('!  ', '! ')
+  
     for sentence in sent_tokenize(question):
         predicted_category_i = forum_question_classifier.predict([sentence])[0]
         predicted_categories[forum_question_classifier.target_names[predicted_category_i]].append(sentence)
@@ -87,13 +91,13 @@ for category in predicted_categories:
 #question_recommender = Recommender()
 
 def kmeans(data, target, target_names):
-    n_clusters = int(len(data) / 3)
+    preprocess = 0
+    n_clusters = int(len(data) / 10)
     clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
     if (printToFile):
-        clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
-                              n_clusters)
-    #get_avg_sihouette()
+        clusterizer.print_clusters('kmeans_{}_{}.txt'.format(category, n_clusters))
+    clusterizer.get_avg_silhouette()
     return clusterizer
 
 
@@ -101,7 +105,7 @@ def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
 
-    sihouette = clusterizer.get_avg_sihouette();
+    sihouette = clusterizer.get_avg_silhouette();
     
     if (printToFile):
         clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
@@ -115,7 +119,7 @@ def affinity(data, target, target_names):
     return clusterizer
 
 def hierarchical(data, linkage):
-    n_clusters = int(len(data) / 30)
+    n_clusters = int(len(data) / 10)
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage=linkage)
     hl = clusterizer.compute()
     labels = hl.labels_
