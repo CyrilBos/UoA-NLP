@@ -3,7 +3,7 @@ This is a summary on how to run the work done on this project and alter the para
 
 ## Dependencies
 - Python3
-- NLTK, don't forget to run nltk.download('popular') to install popular resources
+- NLTK, don't forget to run nltk.download('popular') to install used popular resources
 - PostgreSQL and the python driver psycopgl
 - scikit-learn for Machine Learning
 - gensim for LDA/LSA
@@ -11,14 +11,14 @@ This is a summary on how to run the work done on this project and alter the para
     - IPython (IPyKernel, Jupyter) for LDA visualisation
     - pandas and redis for the recommender
 
-The project needs a postgresql server running a specific database,
+The project needs a postgreSQL server running a specific database,
 which creation and population scripts are available on the VM under /data/uoa-xero-db/.
 The Configuration.py in the Database module should also be modified correctly.
 
 ## Usage
 ### Running the algorithms
 the main scripts are located at the root of the repository.
-To run the classifier and a clustering algorithm:
+To run the classifier and clustering algorithm:
 
 ```python break_classify.py [algorithm]```
 
