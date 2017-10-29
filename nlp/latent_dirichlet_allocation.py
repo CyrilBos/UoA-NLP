@@ -3,7 +3,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import RegexpTokenizer
 
-from nlp.InputPreprocessor import InputPreprocessor
+from nlp.input_preprocessor import InputPreprocessor
 
 
 class LatentDirichletAllocation:

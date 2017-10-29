@@ -1,4 +1,4 @@
-from database.DatabaseManager import DatabaseManager
+from database.database_manager import DatabaseManager
 
 
 class DatabaseHelper(DatabaseManager):

@@ -2,8 +2,8 @@ from multiprocessing import Process
 
 from gensim.models import doc2vec
 
-from Database.DatabaseHelper import DatabaseHelper
-from NLP.InputPreprocessor import InputPreprocessor
+from database.database_helper import DatabaseHelper
+from nlp.input_preprocessor import InputPreprocessor
 
 
 class SimilarityComputingThread(Process):

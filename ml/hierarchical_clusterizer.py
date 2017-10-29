@@ -5,7 +5,7 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import Normalizer
 
-from ml.Clusterizer import Clusterizer
+from ml.clusterizer import Clusterizer
 
 class HierarchicalClusterizer(Clusterizer):
     def __init__(self, data, n_clusters, n_features=10, preprocess=False, linkage = 'ward', verbose=True, jobs=1):

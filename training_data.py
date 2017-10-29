@@ -1,5 +1,5 @@
-from Database.Configuration import connection_string
-from Database.DatabaseHelper import DatabaseHelper
+from database.configuration import connection_string
+from database.database_helper import DatabaseHelper
 
 import numpy as np
 

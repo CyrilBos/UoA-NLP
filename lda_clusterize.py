@@ -1,6 +1,6 @@
-from Database.Configuration import connection_string
-from Database.DatabaseHelper import DatabaseHelper
-from ML.KMeansClusterizer import KMeansClusterizer
+from database.configuration import connection_string
+from database.database_helper import DatabaseHelper
+from ml.kmeans_clusterizer import KMeansClusterizer
 
 db = DatabaseHelper(connection_string)
 

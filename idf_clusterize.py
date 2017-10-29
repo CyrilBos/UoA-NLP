@@ -1,37 +1,35 @@
-from Database.DatabaseHelper import DatabaseHelper
-from Database.Configuration import connection_string
+from database.database_helper import DatabaseHelper
+from database.configuration import connection_string
 
-from ML.KMeansClusterizer import KMeansClusterizer
+from ml.kmeans_clusterizer import KMeansClusterizer
+
+import collections
+
+n_clusters = 300
 
 db = DatabaseHelper(connection_string)
 
-data, target, target_names = db.get_questions_titles_by_forum()
+data, target, target_names = db.get_questions_titles_by_forum(community_name='Business')
 
 ###Clusterization
-clusterizer = KMeansClusterizer(data, target, target_names, use_idf=True)
+clusterizer = KMeansClusterizer(data, n_features=100, jobs=3)
 
-n_clusters = 2000
-km, x = clusterizer.idf_clusterize(n_clusters=n_clusters)
+km = clusterizer.lsa_clusterize(n_clusters=n_clusters, n_components=20, max_iter=2)
 
-clusters = [[] for dummy in range(n_clusters)]
-i=0
-for cluster_num in km.labels_:
-    clusters[cluster_num].append(data[i])
-    i+=1
+clusterizer.print_clusters()
 
-n=0
-################
-save_file = open('idf_clusters_{}.txt'.format(n_clusters), 'w')
+sizes = {}
+clusters = clusterizer.get_clusters()
 
-### Print the clusters ###
-for cluster in clusters:
-    if len(cluster) > 1:
-        print('CLUSTER {}'.format(n))
-        save_file.write('CLUSTER {}\n'.format(n))
-        for doc in cluster:
-            print(doc)
-            save_file.write(doc + '\n')
-    n+=1
+for cluster in clusters.items():
+    cluster_length = len(cluster[1])
+    if cluster_length in sizes:
+        sizes[cluster_length] += 1
+    else:
+        sizes[cluster_length] = 1
 
-#print metrics
-clusterizer.print_metrics(km, x)
+sizes = collections.OrderedDict(sorted(sizes.items()))
+
+for cluster_size, cluster_length in sizes.items():
+    print('number of clusters of size {}: {} percentage of clusters: {}'.format(cluster_size, cluster_length,
+                                                                                cluster_length / n_clusters * 100))

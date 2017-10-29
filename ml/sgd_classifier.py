@@ -4,8 +4,8 @@ from sklearn.feature_extraction.text import TfidfTransformer
 import sklearn.linear_model
 from sklearn.pipeline import Pipeline
 
-from ml.Classifier import Classifier
-from ml.ClassifierData import ClassifierData
+from ml.classifier import Classifier
+from ml.classifier_data import ClassifierData
 
 
 class SGDClassifier(Classifier):

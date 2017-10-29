@@ -1,8 +1,8 @@
-from Database.Configuration import connection_string
-from Database.DatabaseHelper import DatabaseHelper
-from NLP.KeywordExtractor import KeywordExtractor
-from NLP.LatentDirichletAllocation import LatentDirichletAllocation
-from NLP.LatentSemanticAnalysor import LatentSemanticAnalyser
+from database.configuration import connection_string
+from database.database_helper import DatabaseHelper
+from nlp.keyword_extractor import KeywordExtractor
+from nlp.latent_dirichlet_allocation import LatentDirichletAllocation
+from nlp.latent_semantic_analysor import LatentSemanticAnalyser
 
 
 def rankKeywords(docs):

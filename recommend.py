@@ -1,9 +1,9 @@
 import random
 
-from Database.Configuration import connection_string
-from Database.DatabaseManager import DatabaseManager
-from ML.Recommender import Recommender
-from Utils.Logger import logger
+from database.configuration import connection_string
+from database.database_manager import DatabaseManager
+from ml.recommender import Recommender
+from Utils.logger import logger
 
 dbmg = DatabaseManager(connection_string)
 questions_db = dbmg.select_query(

@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
 from itertools import cycle
 
-from ML.Clusterizer import Clusterizer
+from ml.clusterizer import Clusterizer
 
 
 class AffinityPropagationClusterizer(Clusterizer):

@@ -2,7 +2,7 @@ from multiprocessing import Process
 
 from gensim.models import word2vec
 
-from Database.DatabaseHelper import DatabaseHelper
+from database.database_helper import DatabaseHelper
 
 
 class SimilarityComputingThread(Process):

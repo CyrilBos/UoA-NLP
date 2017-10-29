@@ -6,8 +6,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
-from ml.Clusterizer import Clusterizer
-from NLP.LatentDirichletAllocation import LatentDirichletAllocation
+from ml.clusterizer import Clusterizer
+from nlp.latent_dirichlet_allocation import LatentDirichletAllocation
 
 
 class KMeansClusterizer(Clusterizer):

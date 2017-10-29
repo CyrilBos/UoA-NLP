@@ -1,7 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 import csv, time
-from NLP.InputPreprocessor import InputPreprocessor
-from ml.SilhouetteValidator import SilhouetteValidator
+from nlp.input_preprocessor import InputPreprocessor
+from ml.silhouette_validator import SilhouetteValidator
 
 class Clusterizer:
     def __init__(self, data, n_features=10, preprocess=False, jobs=1, verbose=True):

@@ -5,10 +5,10 @@ from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 
-from NLP.InputPreprocessor import InputPreprocessor
-from Utils.Logger import logger
+from nlp.input_preprocessor import InputPreprocessor
+from Utils.logger import logger
 
-from ml.ClassifierData import ClassifierData
+from ml.classifier_data import ClassifierData
 
 
 class Classifier:

@@ -4,11 +4,11 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 
-from ml.Classifier import Classifier
-from NLP.InputPreprocessor import InputPreprocessor
-from Utils.Logger import logger
+from ml.classifier import Classifier
+from nlp.input_preprocessor import InputPreprocessor
+from Utils.logger import logger
 
-from ml.ClassifierData import ClassifierData
+from ml.classifier_data import ClassifierData
 
 
 class C45DecisionTreeClassifier(Classifier):
