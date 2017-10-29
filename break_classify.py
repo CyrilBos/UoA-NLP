@@ -1,5 +1,5 @@
-import sys
-
+import sys, os, configparser
+import Utils.GenerateConfig as ConfigGen
 import numpy as np
 from nltk.tokenize import sent_tokenize
 
@@ -9,38 +9,50 @@ from ML.AffinityPropagationClusterizer import AffinityPropagationClusterizer
 from ML.DBSCANClusterizer import DBSCANClusterizer
 from ML.DecisionTreeClassifier import C45DecisionTreeClassifier
 from ML.HierarchicalClusterizer import HierarchicalClusterizer
+from ML.SGDClassifier import SGDClassifier
 from ML.KMeansClusterizer import KMeansClusterizer
 
-preprocess = False
-n_features = 20
-jobs = 3
-verbose = True
-kfold_cross_validation_splits = 5
-ignored_categories = ['outroduction', 'code']
+configfile_name = "config.ini"
+# Check if there is already a configurtion file
+if not os.path.isfile(configfile_name):
+    ConfigGen.GenerateConfig(configfile_name);
 
+config = configparser.ConfigParser()
+config.read(configfile_name)
 
-def print_usage():
-    print(
-        'Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
+try:
+    printToFile = int(config['printing']['print_to_file'])
+    printToCSV = int(config['printing']['print_to_csv'])
+
+    preprocess = int(config['other']['preprocess'])
+    n_features = int(config['other']['n_features'])
+    jobs = int(config['other']['jobs'])
+    verbose = int(config['other']['verbose'])
+    ignored_categories = (config['other']['ignored_categories'])
+
+    if (config['data']['data_source'] == "xero"):
+        dbmg = DatabaseHelper(connection_string)
+        questions = dbmg.get_questions_content()
+        data, target, target_names = dbmg.get_training_data(config['data']['training_data'])
+    else:
+        print("invalid Data source")
+        exit()
+except:
+    os.remove(configfile_name)
+    ConfigGen.GenerateConfig(configfile_name)
+    print("Config corrupted. File has been reset, please try again")
     exit()
-
-
-if sys.argv < 2:
-    print_usage()
 
 algo_opt = sys.argv[1]
 
-dbmg = DatabaseHelper(connection_string)
-questions = dbmg.get_questions_content()
-data, target, target_names = dbmg.get_training_data('Business')
-
 ###################################
 
-forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess)
+forum_question_classifier = C45DecisionTreeClassifier(data, target, target_names, preprocess=preprocess) #SGDClassifier(data, target, target_names)
 forum_question_classifier.train()
 print('Precision of the classifier on its training data set: ', forum_question_classifier.evaluate_precision(1))
-print("{}-Fold precision evaluation on the training data set: \n".format(kfold_cross_validation_splits),
-      forum_question_classifier.evaluate_precision(kfold_cross_validation_splits))
+
+n_splits = 20
+print("{}-Fold precision evaluation on the training data set: \n".format(n_splits), forum_question_classifier.evaluate_precision(n_splits))
 
 ### predict the category of every question, appending it into the corresponding list of the dictionary ###
 
@@ -52,10 +64,13 @@ for category_name in target_names:
     cluster_data[category_name] = []
     cluster_target[category_name] = []
 
+i = 1000   # this is to make it run faster for testing, remove during normal runs
 for question in questions:
-    question = question.replace('.', '. ').replace('.  ', '. ').replace('?', '? ').replace('?  ', '? ').replace('!',
-                                                                                                                '! ').replace(
-        '!  ', '! ')
+    if (i <= 0):
+        break
+    i = i - 1
+    question = question.replace('.', '. ').replace('.  ', '. ').replace('?', '? ').replace('?  ', '? ').replace('!', '! ').replace('!  ', '! ')
+  
     for sentence in sent_tokenize(question):
         predicted_category_i = forum_question_classifier.predict([sentence])[0]
         predicted_categories[forum_question_classifier.target_names[predicted_category_i]].append(sentence)
@@ -67,67 +82,79 @@ for category in predicted_categories:
         print(predicted_categories[category][i])
 
 
+
 ##########################################################################################################
 
 
 ### Compute and print clusters ###
 
-# question_recommender = Recommender()
+#question_recommender = Recommender()
 
 def kmeans(data, target, target_names):
-    n_clusters = int(len(data) / 3)
-    clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs,
-                                    verbose=verbose)
+    preprocess = 0
+    n_clusters = int(len(data) / 10)
+    clusterizer = KMeansClusterizer(data, target, target_names, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     clusterizer.lda_clusterize(n_clusters=n_clusters, n_features=20, max_iter=1)
-    clusterizer.print_to_file('kmeans_{}_{}.txt'.format(category, n_clusters), cluster_data[category],
-                              n_clusters)
+    if (printToFile):
+        clusterizer.print_clusters('kmeans_{}_{}.txt'.format(category, n_clusters))
+    clusterizer.get_avg_silhouette()
+    return clusterizer
 
 
 def dbscan(data, category):
     clusterizer = DBSCANClusterizer(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
     db = clusterizer.compute(eps=0.5, min_samples=5)
-    clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
+
+    sihouette = clusterizer.get_avg_silhouette();
+    
+    if (printToFile):
+        clusterizer.print_clusters('dbscan_{}_{}'.format(category, len(clusterizer.get_clusters())))
+
+    return clusterizer
 
 
 def affinity(data, target, target_names):
     clusterizer = AffinityPropagationClusterizer(data)
-
     clusterizer.compute(n_features=10, max_iter=1)
+    return clusterizer
 
-
-def hierarchical(data, linkage, category):
-    n_clusters = int(len(data) / 3)
+def hierarchical(data, linkage):
+    n_clusters = int(len(data) / 10)
     clusterizer = HierarchicalClusterizer(data, n_clusters, linkage=linkage)
     hl = clusterizer.compute()
     labels = hl.labels_
     print("Nuber of data points: ", labels.size)
     print("Number of clusters: ", np.unique(labels).size)
+    
+    if (printToFile):
+        clusterizer.print_clusters('hierarchical_{}_{}_{}'.format(linkage, category, n_clusters))
 
-    clusterizer.print_clusters('hierarchical_{}_{}_{}'.format(linkage, category, n_clusters))
-    # clusters = [data[labels == i] for i in range(n_clusters)]
-    # for row in clusters:
-    #    print(row)
 
+    return clusterizer
 
 for category in predicted_categories:
     if len(predicted_categories[category]) > 0 and category not in ignored_categories:
-        # cluster_target_names.append(category)
-        # for sentence in predicted_categories[category]:
-        # cluster_data[category].append(sentence)
-        # cluster_target[category].append(category)
+        #cluster_target_names.append(category)
+        for sentence in predicted_categories[category]:
+            cluster_data[category].append(sentence)
+            cluster_target[category].append(category)
 
         if algo_opt == 'kmeans':
-            kmeans(cluster_data[category], cluster_target[category], [category])
+            clusterizer = kmeans(cluster_data[category], cluster_target[category], [category])
         elif algo_opt == 'dbscan':
-            dbscan(predicted_categories[category], category)
+            clusterizer = dbscan(predicted_categories[category], category)
         elif algo_opt == 'hierarchical':
-            hierarchical(predicted_categories[category], 'ward', category)
+            clusterizer = hierarchical(cluster_data[category], 'ward')
         elif algo_opt == 'affinity':
-            affinity(cluster_data[category], cluster_target[category], [category])
+            clusterizer = affinity(cluster_data[category], cluster_target[category], [category])
         else:
-            print_usage()
+            print('Unrecognized algorithm argument. Please provide one of these as first argument of this script: kmeans, dbscan, hierarchical, affinity')
+            exit()
 
-        """#old code of running recommender on the data
+        if (printToCSV):
+            clusterizer.print_to_csv();
+
+        """#Seems too heavy to run
         #"Clustering" the documents using a recommender
         recommend_data = {'id':[], 'description':[]}
 

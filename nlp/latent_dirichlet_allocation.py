@@ -3,7 +3,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import RegexpTokenizer
 
-from NLP.InputPreprocessor import InputPreprocessor
+from nlp.InputPreprocessor import InputPreprocessor
 
 
 class LatentDirichletAllocation:
@@ -39,6 +39,8 @@ class LatentDirichletAllocation:
 
         for i in self.__doc_set:
             # clean and tokenize document string
+            #print(i)
+            #print(type(i))
             raw = i.lower()
             tokens = tokenizer.tokenize(raw)
 

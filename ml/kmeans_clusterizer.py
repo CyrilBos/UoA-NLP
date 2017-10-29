@@ -1,13 +1,12 @@
 import numpy as np
 
-
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.decomposition import TruncatedSVD
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import Normalizer
 
-from ML.Clusterizer import Clusterizer
+from ml.Clusterizer import Clusterizer
 from NLP.LatentDirichletAllocation import LatentDirichletAllocation
 
 
@@ -18,31 +17,7 @@ class KMeansClusterizer(Clusterizer):
     - LDA topics representation
     """
 
-    def __init__(self, data, target, target_names, n_features, preprocess=False, jobs=1, verbose=True):
-        """
-        Initializes the new KMeansClusterizer instance with the given data and parameters.
-
-        :param data: the text documents
-        :type data: Union[list, tuple]
-        :param target: holds the target_names index of each document
-        (target[0]=0 means the first data comes from the first target)
-        :type target: Union[list, tuple]
-        :param target_names: is an array ro tuple that holds the labels names (i.e the forums names)
-        :type target_names: Union[list, tuple]
-        :param jobs: number of parallel threads used to compute. Should be number of CPU cores - 1
-        :type jobs: int
-        :param verbose: set to True to print details on the KMeans clusterization
-        :type verbose: bool
-        """
-
-        super().__init__(data, n_features=n_features, preprocess=preprocess, jobs=jobs, verbose=verbose)
-
-        self.__target = target
-        self.__target_names = target_names
-
-        self.__true_k = np.unique(self.__target).shape[0]
-
-    def idf_clusterize(self, n_components=None, n_clusters=-1, max_iter=5):
+    def lsa_clusterize(self, n_components, n_clusters, max_iter=5):
         """
         Computes the TF-IDF representation of the data then clusters them with the given parameters.
         :param n_clusters: Number of wanted clusters
@@ -56,47 +31,43 @@ class KMeansClusterizer(Clusterizer):
         :return: a tuple (clusters, lda model, lda vocabulary)
         :rtype: tuple
         """
-        if n_clusters != -1:
-            self.__true_k = n_clusters
 
-        if n_components:
-            # Vectorizer results are normalized, which makes KMeans behave as
-            # spherical k-means for better results. Since LSA/SVD results are
-            # not normalized, we have to redo the normalization.
-            svd = TruncatedSVD(n_components)
-            normalizer = Normalizer(copy=False)
-            lsa = make_pipeline(svd, normalizer)
 
-            self.__preprocessed_data = lsa.fit_transform(self._preprocessed_data)
+        # Vectorizer results are normalized, which makes KMeans behave as
+        # spherical k-means for better results. Since LSA/SVD results are
+        # not normalized, we have to redo the normalization.
+        svd = TruncatedSVD(n_components)
+        normalizer = Normalizer(copy=False)
+        lsa = make_pipeline(svd, normalizer)
 
-            explained_variance = svd.explained_variance_ratio_.sum()
-            print("Explained variance of the SVD step: {}%".format(
-                int(explained_variance * 100)))
+        preprocessed_data = lsa.fit_transform(self._preprocessed_data)
 
-            print()
+        explained_variance = svd.explained_variance_ratio_.sum()
+        print("Explained variance of the SVD step: {}%".format(
+            int(explained_variance * 100)))
 
-        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=10,
+        print()
+
+        km = KMeans(n_clusters=n_clusters, init='k-means++', max_iter=max_iter, n_init=10,
                     verbose=self._verbose, n_jobs=self._jobs)
 
         print("Clustering sparse data with %s" % km)
 
-        km.fit(self.__preprocessed_data)
+        km.fit(preprocessed_data)
 
         self._labels = km.labels_
 
         return km
 
-    def lda_clusterize(self, n_features=20, n_clusters=-1, lda_iter=5, max_iter=5):
+    def lda_clusterize(self, n_features, n_clusters, lda_iter=5, kmeans_iter=5):
         """
         Computes TF-IDF vectors of the documents and clusters them using KMeans.
         :param n_clusters: number of wanted clusters
         :return: tuple (clusters, feature list)
         """
-        if n_clusters != -1:
-            self.__true_k = n_clusters
         print("Extracting features from the training dataset using a sparse vectorizer")
 
-        lda = LatentDirichletAllocation(self.__preprocessed_data, self._jobs)
+        lda = LatentDirichletAllocation(self._data, self._jobs)
         lda_model, corpus, vocab = lda.compute(n_features, lda_iter)
 
         X = []
@@ -112,36 +83,16 @@ class KMeansClusterizer(Clusterizer):
 
         print("n_samples: %d, n_features: %d" % X.shape)
 
-        km = KMeans(n_clusters=self.__true_k, init='k-means++', max_iter=max_iter, n_init=1,
+        km = KMeans(n_clusters=n_clusters, init='k-means++', max_iter=kmeans_iter, n_init=1,
                     verbose=self._verbose, n_jobs=self._jobs)
 
+        
         print("Clustering sparse data with %s" % km)
 
         self.__processed_data = km.fit(X)
-
+        self._labels = km.labels_
         return km, self.__processed_data
-
-    def print_to_file(self, filename, cluster_category_data, n_clusters):
-        clusters = [[] for dummy in range(n_clusters)]
-
-        i = 0
-        for cluster_num in self._labels:
-            clusters[cluster_num].append(cluster_category_data[i])
-            i += 1
-
-        n = 0
-
-        save_file = open(filename, 'w')
-
-        for cluster in clusters:
-            if len(cluster) > 1:
-                # print('CLUSTER {}'.format(n))
-                save_file.write('CLUSTER {}\n'.format(n))
-                for doc in cluster:
-                    # print(doc)
-                    save_file.write(doc + '\n')
-            n += 1
-
+    
     def get_metrics(self, km, X):
         """
         Computes and returns the metrics using km and X as ground truth

@@ -1,11 +1,11 @@
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
+import sklearn.linear_model
 from sklearn.pipeline import Pipeline
 
-from ML.Classifier import Classifier
-from ML.ClassifierData import ClassifierData
+from ml.Classifier import Classifier
+from ml.ClassifierData import ClassifierData
 
 
 class SGDClassifier(Classifier):
@@ -28,5 +28,5 @@ class SGDClassifier(Classifier):
         :param penalty: level of penalty to be used. Can be 'none', 'l2', 'l1', or 'elasticnet'
         :type target_names: list
         """
-        super().__init__(data, target, target_names, SGDClassifier(alpha=alpha, n_iter=n_iter,
+        super().__init__(data, target, target_names, sklearn.linear_model.SGDClassifier(alpha=alpha, n_iter=n_iter,
                                                    penalty=penalty), preprocess=preprocess)

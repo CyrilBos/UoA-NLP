@@ -1,4 +1,4 @@
-from Database.DatabaseManager import DatabaseManager
+from database.DatabaseManager import DatabaseManager
 
 
 class DatabaseHelper(DatabaseManager):
@@ -61,7 +61,7 @@ class DatabaseHelper(DatabaseManager):
         :return: the forum names
         :rtype: list
         """
-        forums = self.get_forums_names()
+        forums = self.get_forums()
         forums_names = []
         for forum in forums:
             forums_names.append(forums[forum]['name'])
@@ -95,7 +95,7 @@ class DatabaseHelper(DatabaseManager):
 
     def get_questions_titles_by_forum(self, community_name='Business'):
         """
-        Retrieves the questions grouped by forum and returns a tuple of lists used in some ML algorithms
+        Retrieves the questions grouped by forum and returns a tuple of lists used in some ml algorithms
         :return: returns a tuple of lists, the first one contains the contents of the questions, the second the forum index
          for each question, the third the forum names (used as classifying labels called "target")
         :rtype: tuple
@@ -106,8 +106,8 @@ class DatabaseHelper(DatabaseManager):
         target_names = []
 
         questions_forum_db = self.select_query(
-            "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id"
-            "where community_id = %s",
+            "select * from question join forum_details on forum_details.forum_details_id = question.forum_details_id\
+            where community_id = %s",
             self.get_community_id(community_name),
             fetch_to_dict=True)
 

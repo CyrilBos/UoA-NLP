@@ -1,4 +1,4 @@
-from NLP.InputPreprocessor import InputPreprocessor
+from nlp.InputPreprocessor import InputPreprocessor
 
 class KeywordExtractor:
     """

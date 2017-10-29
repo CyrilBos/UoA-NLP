@@ -1,13 +1,14 @@
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 
 from NLP.InputPreprocessor import InputPreprocessor
 from Utils.Logger import logger
 
-from ML.ClassifierData import ClassifierData
+from ml.ClassifierData import ClassifierData
 
 
 class Classifier:
@@ -63,7 +64,7 @@ class Classifier:
     def text_clf(self):
         return self._text_clf
 
-    def evaluate_precision(self, n_splits):
+    def kfold_cross_validation(self, n_splits):
         """
             Evaluates the precision of the classifier by running its prediction on the training data set
             :param n_splits: number of splits to split the training data into
@@ -71,6 +72,7 @@ class Classifier:
             :return: the percentage of correctly predicted categories
             :rtype: float
         """
+
         if n_splits == 1:
             return np.mean(self.predict(self._clf_data.data) == self._clf_data.target)
 
@@ -84,8 +86,9 @@ class Classifier:
         splits = []
         for i in range(0, n_splits):
             split = ClassifierData(self._clf_data.data[i:i + sub_length], self._clf_data.target[i:i + sub_length],
-                                   self._clf_data.target_names)
+                                   self._clf_data.target_names[i:i + sub_length])
             splits.append(split)
+            split_length = len(split.data)
 
         total = 0
         precisions = []
@@ -101,6 +104,7 @@ class Classifier:
                     for i in range(len(other_split.data)):
                         training_data.target.append(other_split.target[i])
 
+            #type(self) will invoke the right constructor for children
             test_classifier = type(self)(training_data.data, training_data.target,
                                                         training_data.target_names)
             test_classifier.train()
@@ -113,6 +117,21 @@ class Classifier:
             logger.debug("Total added splits length: {}".format(total))
 
         return np.mean(precisions)
+
+    def accuracy_performance(self, testing_percentage=0.66):
+        training_data_length = int(testing_percentage * len(self._clf_data.data))
+        training_data = self._clf_data.data[:training_data_length]
+        training_target = self._clf_data.target[:training_data_length]
+
+        testing_data = self._clf_data.data[training_data_length + 1:]
+        testing_target = self._clf_data.target[training_data_length + 1:]
+
+        classifier = type(self)(training_data, training_target, self.target_names)
+        classifier.train()
+        predictions = classifier.predict(testing_data)
+        return accuracy_score(predictions, testing_target)
+
+
 
     def predict(self, data):
         """

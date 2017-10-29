@@ -1,5 +1,5 @@
 from sklearn.cluster import DBSCAN
-from ML.Clusterizer import Clusterizer
+from ml.Clusterizer import Clusterizer
 
 
 class DBSCANClusterizer(Clusterizer):

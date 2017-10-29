@@ -9,7 +9,7 @@ from ML.Clusterizer import Clusterizer
 class AffinityPropagationClusterizer(Clusterizer):
     def compute(self, n_features, max_iter=100):
         tf_idf_vectorizer = TfidfVectorizer(max_df=0.5, max_features=n_features,
-                                     min_df=2, stop_words='english')
+                                            min_df=2, stop_words='english')
 
         X = tf_idf_vectorizer.fit_transform(self._data)
 
